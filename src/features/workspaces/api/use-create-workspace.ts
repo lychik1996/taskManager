@@ -11,7 +11,13 @@ type CreateWorkSpaceResponse = {success:boolean} | {message: string};
 
 const postCreateWorkSpace = async (data:CreateWorkSpaceRequest):Promise<CreateWorkSpaceResponse>=>{
     const validData = createWorkspaceShcema.parse(data);
-    const res = await axios.post('/api/protect/workspaces/create', validData);
+    
+    const formData = new FormData();
+    formData.append("name",validData.name);
+    if(validData.image instanceof File){
+      formData.append("image",validData.image);
+    }
+    const res = await axios.post('/api/protect/workspaces/create', formData);
     return res.data;
 }
 

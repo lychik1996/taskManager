@@ -16,6 +16,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useCreateWorkSpace } from '../api/use-create-workspace';
+import { useRef } from 'react';
+import Image from 'next/image';
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
+import { ImageIcon } from 'lucide-react';
 
 interface CreateWorkSpaceFormProps {
   onCancel?: () => void;
@@ -25,6 +29,7 @@ export default function CreateWorkSpaceForm({
   onCancel,
 }: CreateWorkSpaceFormProps) {
   const { mutate, isPending } = useCreateWorkSpace();
+  const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof createWorkspaceShcema>>({
     resolver: zodResolver(createWorkspaceShcema),
     defaultValues: {
@@ -32,8 +37,19 @@ export default function CreateWorkSpaceForm({
     },
   });
   const onSubmit = (values: z.infer<typeof createWorkspaceShcema>) => {
-    mutate(values);
+    const finalValue = {
+      ...values,
+      image: values.image instanceof File? values.image : ""
+    }
+    mutate(finalValue);
   };
+
+  const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    const file = e.target.files?.[0];
+    if(file){
+      form.setValue('image',file)
+    }
+  }
 
   return (
     <Card className="w-full h-full border-node shadow-none">
@@ -64,6 +80,59 @@ export default function CreateWorkSpaceForm({
                     </FormControl>
                     <FormMessage />
                   </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <div className="flex flex-col gap-y-2">
+                    <div className="flex items-center gap-x-5">
+                      {field.value ? (
+                        <div className='size-[72px] relative rounded-md overflow-hidden'>
+                          <Image 
+                          alt="Logo"
+                          fill
+                          className='object-cover'
+                          src={field.value instanceof File
+                            ?URL.createObjectURL(field.value)
+                            :field.value
+                          }
+                          />
+                        </div>
+                      ) : (
+                        <Avatar className='size-[72px] flex items-center justify-center'>
+                          <AvatarFallback>
+                            <ImageIcon className='size-[36px] text-neutral-400'/>
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      <div className='flex flex-col'>
+                        <p className='text-sm'>Workspace Icon</p>
+                        <p className='text-sm text-muted-foreground'>
+                          JPG, PNG,SVG or JPEG, max 1MB
+                        </p>
+                        <input
+                        className='hidden'
+                        type='file'
+                        accept='.jpg, .png, .svg, .jpeg'
+                        ref={inputRef}
+                        onChange={handleImageChange}
+                        disabled={isPending}
+                        />
+                        <Button
+                        type='button'
+                        disabled={isPending}
+                        variant="teritrary"
+                        size="xs"
+                        className='w-fit mt-2'
+                        onClick={()=>inputRef.current?.click()}
+                        >
+                          Upload Image
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               />
             </div>
