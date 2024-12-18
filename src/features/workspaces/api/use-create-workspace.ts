@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 
 type CreateWorkSpaceRequest = z.infer<typeof createWorkspaceShcema>;
-type CreateWorkSpaceResponse = {success:boolean} | {message: string};
+type CreateWorkSpaceResponse = {data:{$id:string}}
 
 const postCreateWorkSpace = async (data:CreateWorkSpaceRequest):Promise<CreateWorkSpaceResponse>=>{
     const validData = createWorkspaceShcema.parse(data);

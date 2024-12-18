@@ -1,5 +1,7 @@
-import { DATABASE_ID, IMAGES_BUCKET_ID, WWORKSPACES_ID } from '@/config';
+import { DATABASE_ID, IMAGES_BUCKET_ID, MEMBERS_ID, WWORKSPACES_ID } from '@/config';
+import { MemberRole } from '@/features/members/types';
 import { CheckSession } from '@/lib/checkSession';
+import { generateInviteCode } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { ID } from 'node-appwrite';
 
@@ -18,10 +20,10 @@ export async function POST(req: NextRequest) {
     const  name = formData.get("name") as string;
     const image = formData.get("image") as File;
     
-    console.log(name)
+   
     let uploadedImageUrl:string|undefined;
     if(image instanceof File){
-      console.log(image)
+      
       const file = await storage.createFile(
         IMAGES_BUCKET_ID,
         ID.unique(),
@@ -42,9 +44,21 @@ export async function POST(req: NextRequest) {
         name,
         userId: user.$id,
         imageUrl:uploadedImageUrl,
+        inviteCode:generateInviteCode(10)//max 10 length
       }
     );
-    console.log(2)
+
+    await databases.createDocument(
+      DATABASE_ID,
+      MEMBERS_ID,
+      ID.unique(),
+      {
+        userId:user.$id,
+        workspaceId:workspace.$id,
+        role:MemberRole.ADMIN
+      }
+    )
+    
     return NextResponse.json({ data: workspace });
   } catch {
     return NextResponse.json(

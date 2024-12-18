@@ -8,7 +8,7 @@ interface Workspace {
     $createdAt: string;
   }
   
-  // Тип для відповіді API (містить масив робочих просторів)
+ 
   interface WorkspacesResponse {
     documents: Workspace[];
     total:number;

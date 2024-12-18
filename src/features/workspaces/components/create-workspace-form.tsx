@@ -20,6 +20,8 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import { ImageIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 interface CreateWorkSpaceFormProps {
   onCancel?: () => void;
@@ -28,6 +30,7 @@ interface CreateWorkSpaceFormProps {
 export default function CreateWorkSpaceForm({
   onCancel,
 }: CreateWorkSpaceFormProps) {
+  const router = useRouter();
   const { mutate, isPending } = useCreateWorkSpace();
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof createWorkspaceShcema>>({
@@ -41,7 +44,13 @@ export default function CreateWorkSpaceForm({
       ...values,
       image: values.image instanceof File? values.image : ""
     }
-    mutate(finalValue);
+    mutate(finalValue,{
+      onSuccess:({data})=>{
+        form.reset();
+        
+        router.push(`/workspaces/${data?.$id}`)
+      }
+    });
   };
 
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -144,6 +153,9 @@ export default function CreateWorkSpaceForm({
                 variant="secondary"
                 onClick={onCancel}
                 disabled={isPending}
+                className={cn(
+                  !onCancel && "invisible"
+                )}
               >
                 Cancel
               </Button>
