@@ -1,4 +1,4 @@
-import { DATABASE_ID, MEMBERS_ID, WWORKSPACES_ID } from '@/config';
+import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from '@/config';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 import { Query } from 'node-appwrite';
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 
     const workspaces = await databases.listDocuments(
         DATABASE_ID,
-        WWORKSPACES_ID,
+        WORKSPACES_ID,
         [
           Query.orderDesc("$createdAt"),
           Query.contains("$id",workspaceIds)

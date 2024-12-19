@@ -1,4 +1,4 @@
-import { DATABASE_ID, IMAGES_BUCKET_ID, MEMBERS_ID, WWORKSPACES_ID } from '@/config';
+import { DATABASE_ID, IMAGES_BUCKET_ID, MEMBERS_ID, WORKSPACES_ID } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { CheckSession } from '@/lib/checkSession';
 import { generateInviteCode } from '@/lib/utils';
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     
     const workspace = await databases.createDocument(
       DATABASE_ID,
-      WWORKSPACES_ID,
+      WORKSPACES_ID,
       ID.unique(),
       {
         name,
