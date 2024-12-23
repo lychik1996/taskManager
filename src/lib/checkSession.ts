@@ -1,4 +1,5 @@
 
+import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import {
   Client,
@@ -23,8 +24,9 @@ export async function CheckSession(req:NextRequest): Promise<AdditionalContext |
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
 
-  const session = req.cookies.get('session');
-
+  
+  const session =  (await cookies()).get('session');
+  
   if (!session) {
     return null;
   }
