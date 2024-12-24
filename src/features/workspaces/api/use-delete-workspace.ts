@@ -17,7 +17,7 @@ const deleteWorkSpace = async ({param}:DeleteWorkSpaceRequest):Promise<DeleteWor
 export const useDeleteWorkSpace = () => {
   const queryClient = useQueryClient();
   return useMutation<DeleteWorkSpaceResponse,Error, DeleteWorkSpaceRequest>({
-    mutationFn:async(data:DeleteWorkSpaceRequest)=>{
+    mutationFn:async(data)=>{
       return await deleteWorkSpace(data)
     },
     onSuccess:({data})=>{
