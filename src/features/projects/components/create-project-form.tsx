@@ -50,8 +50,7 @@ export default function CreateProjectForm({
     mutate(finalValue, {
       onSuccess: (data) => {
         form.reset();
-
-        //TODO:Redirect to project screen router.push(`/workspaces/${data?.$id}`);
+        router.push(`/workspaces/${data.workspaceId}/projects/${data.$id}`)
       },
     });
   };

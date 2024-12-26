@@ -6,6 +6,8 @@ import { Models } from "node-appwrite";
 
 
 
+
+
 type ResetInviteCodeRequest =  {param:string};
 type ResetInviteCodeResponse = {workspace: Models.Document}
 
@@ -17,13 +19,14 @@ const resetInviteCodeSpace = async ({param}:ResetInviteCodeRequest):Promise<Rese
 }
 
 export const useResetInviteCode = () => {
+
   const queryClient = useQueryClient();
   return useMutation<ResetInviteCodeResponse,Error, ResetInviteCodeRequest>({
     mutationFn:async(data:ResetInviteCodeRequest)=>{
       return await resetInviteCodeSpace(data)
     },
     onSuccess:(data)=>{
-      toast.success("Ivnite code reset")
+      toast.success("Ivnite code reset");
       queryClient.invalidateQueries({queryKey:['workspaces']})
       queryClient.invalidateQueries({queryKey:["workspace",data.workspace.$id]})
     },

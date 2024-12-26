@@ -11,7 +11,7 @@ export default function Projects() {
     const pathname=usePathname();
     const {open} = useCreateProjectModal();
     const workspaceId = useWorkspaceId();
-    const projectId =null; //TODO:Use the projectId hook
+    
     const {data} = useGetProjects({
         workspaceId
     })
@@ -26,7 +26,7 @@ export default function Projects() {
         />
       </div>
       {data?.documents?.map((project)=>{
-        const href =`/workspaces/${workspaceId}/projects/${projectId}`;
+        const href =`/workspaces/${workspaceId}/projects/${project.$id}`;
         const isActive = pathname===href;
         return(
             <Link href={href} key={project.$id}>
