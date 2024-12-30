@@ -16,8 +16,9 @@ const ReqZ = z.object({
   search: z.string().nullish(),
   dueDate: z.string().nullish(),
 });
-type Reqtype = z.infer<typeof ReqZ>;
-export async function POST(req: NextRequest) {
+
+export async function GET(req: NextRequest) {
+  
   try {
     const { users } = await createAdminClient();
     const context = await CheckSession(req);
@@ -27,15 +28,10 @@ export async function POST(req: NextRequest) {
     }
     const databases = context.databases;
     const user = context.user;
-
-    const {
-      workspaceId,
-      projectId,
-      status,
-      search,
-      assigneeId,
-      dueDate,
-    }: Reqtype = await req.json();
+    const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+    const { workspaceId, projectId, status, search, assigneeId, dueDate } =
+      ReqZ.parse(params);
+     
     const member = await getMember({
       databases,
       workspaceId,
@@ -112,6 +108,7 @@ export async function POST(req: NextRequest) {
         assignee,
       };
     });
+    
     return NextResponse.json({ ...tasks, documents: populatedTasks });
   } catch {
     return NextResponse.json(
