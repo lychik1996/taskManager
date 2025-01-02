@@ -1,4 +1,4 @@
-import { updateWorkspaceShcema } from './../../../../../../features/workspaces/schemas';
+
 import { DATABASE_ID, IMAGES_BUCKET_ID, WORKSPACES_ID } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { getMember } from '@/features/members/utils';

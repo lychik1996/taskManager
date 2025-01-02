@@ -1,7 +1,7 @@
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { Project } from '@/features/projects/types';
-import { TaskStatus } from '@/features/tasks/types';
+import { Task, TaskStatus } from '@/features/tasks/types';
 import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
       query.push(Query.equal('name', search));
     }
 
-    const tasks = await databases.listDocuments(DATABASE_ID, TASKS_ID, query);
+    const tasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, query);
 
     const projectIds = tasks.documents.map((task) => task.projectId);
     const assigneeIds = tasks.documents.map((task) => task.assigneeId);

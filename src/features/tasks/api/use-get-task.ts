@@ -4,17 +4,7 @@ import axios from 'axios';
 
 import { TaskStatus } from '../types';
 
-type Nullable<T> = {
-  [K in keyof T]?: T[K] | null;
-};
-type TasksRequest = Nullable<{
-  search: string,
-  dueDate:string
-  status: TaskStatus ;
-  workspaceId: string ;
-  projectId: string; 
-  assigneeId: string;
-}>
+
 
 type TaskDocument = {
   workspaceId: string;
@@ -50,34 +40,23 @@ type TaskDocument = {
   };
 };
 
-type TasksResponse = {
-  total: number;
-  documents: TaskDocument[];
-};
 
-const getTasks = async (data: TasksRequest) => {
+
+const getTask = async (param: string) => {
  
 
-  const res = await axios.get('/api/protect/tasks/get/', {
-    params: data,
-  });
-  return res.data as TasksResponse;
+  const res = await axios.get(`/api/protect/tasks/getOne/${param}`);
+  return res.data as TaskDocument;
 };
 
-export const useGetTasks = (data: TasksRequest) => {
-  const { workspaceId, projectId, status, assigneeId, search, dueDate } = data;
+export const useGetTask = (taskId: string) => {
   const query = useQuery({
     queryKey: [
-      'tasks',
-      workspaceId,
-      projectId,
-      status,
-      search,
-      assigneeId,
-      dueDate,
+      'task',
+      taskId
     ],
     queryFn: async () => {
-      const res = await getTasks(data);
+      const res = await getTask(taskId);
       
       return res;
     },
