@@ -35,7 +35,7 @@ export default function TaskActions({
     const onDelete =  async()=>{
         const ok = await confirm();
         if(!ok) return;
-        mutate({param:id})
+        mutate({param:id});
     }
     const onOpenTask = ()=>{
         router.push(`/workspaces/${workspaceId}/tasks/${id}`)
@@ -45,6 +45,7 @@ export default function TaskActions({
     }
   return (
     <div className="flex justify-end">
+      
         <ConfirmDialog/>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
@@ -54,7 +55,7 @@ export default function TaskActions({
             
             className="font-medium p-[10px] cursor-pointer"
           >
-            <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
+            <ExternalLinkIcon className=" mr-2 stroke-2" />
             Task Details
           </DropdownMenuItem>
           <DropdownMenuItem

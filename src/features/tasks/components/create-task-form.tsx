@@ -55,7 +55,7 @@ export default function CreateTaskForm({
       name: '',
       dueDate: undefined,
       assigneeId: undefined,
-      status: TaskStatus.BACKLOG,
+      status: undefined,
       projectId: undefined,
     },
   });

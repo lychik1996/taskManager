@@ -2,6 +2,7 @@ import axios from "axios";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 
@@ -17,7 +18,6 @@ const deleteTask = async ({param}:DeleteTaskRequest):Promise<DeleteTaskResponse>
 }
 
 export const useDeleteTask = () => {
-  
   const queryClient = useQueryClient();
   return useMutation<DeleteTaskResponse,Error, DeleteTaskRequest>({
     mutationFn:async(data)=>{
@@ -25,7 +25,6 @@ export const useDeleteTask = () => {
     },
     onSuccess:({data})=>{
       toast.success("Task deleted");
-      
       queryClient.invalidateQueries({queryKey:['tasks']})
       queryClient.invalidateQueries({queryKey:["task",data.$id]})
     },
