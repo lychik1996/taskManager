@@ -7,11 +7,12 @@ import { createTaskSchema } from '../schemas';
 import { Models } from 'node-appwrite';
 import { useRouter } from 'next/navigation';
 
-type UpdateTaskRequest = z.infer<typeof createTaskSchema>&{param:string};
+type UpdateTaskRequest = Partial<z.infer<typeof createTaskSchema>>&{param:string};
 type UpdateTaskResponse = Models.Document & {
   name: string;
   imageUrl: string | undefined;
   workspaceId: string;
+  description?: string | null ;
 };
 
 const updateTask = async (
