@@ -1,8 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { AlertTriangle, Loader } from 'lucide-react';
-import Link from 'next/link';
+
 
 export default function LoadingPage() {
   return (
