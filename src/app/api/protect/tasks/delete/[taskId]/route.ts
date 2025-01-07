@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { taskId: string } }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
    
@@ -22,7 +22,7 @@ export async function DELETE(
         { status: 401 }
       );
     }
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

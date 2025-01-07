@@ -80,11 +80,9 @@ export default function EditProjectForm({
 
     mutate(finalValue, {
       onSuccess: (data) => {
-        form.reset();
-
-        router.push(
-          `/workspaces/${initialValues.workspaceId}/projects/${data?.$id}`
-        );
+        // router.push(
+        //   `/workspaces/${initialValues.workspaceId}/projects/${data?.$id}`
+        // );
       },
     });
   };

@@ -30,7 +30,7 @@ const postUpdateProject = async (data:UpdateProjectRequest):Promise<UpdateProjec
 }
 
 export const useUpdateProject = () => {
-  const router = useRouter();
+  
   const queryClient = useQueryClient();
   return useMutation<UpdateProjectResponse,Error, UpdateProjectRequest>({
     mutationFn:async(data)=>{
@@ -38,7 +38,7 @@ export const useUpdateProject = () => {
     },
     onSuccess:(data)=>{
       toast.success("Project updated");
-      router.refresh();
+      
       queryClient.invalidateQueries({queryKey:['projects']});
       queryClient.invalidateQueries({queryKey:['project',data.$id]})
     },

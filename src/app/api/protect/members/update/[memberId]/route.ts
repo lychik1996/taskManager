@@ -5,7 +5,7 @@ import { CheckSession } from "@/lib/checkSession";
 import { NextRequest, NextResponse } from "next/server";
 import { Query } from "node-appwrite";
 
-export async function PATCH(req:NextRequest,{ params }: { params: { memberId: string } }) {
+export async function PATCH(req:NextRequest,{ params }: { params: Promise<{ memberId: string }> }) {
         try{
             const {memberId} = await params;
             if(!memberId){
@@ -15,7 +15,7 @@ export async function PATCH(req:NextRequest,{ params }: { params: { memberId: st
             if(!role){
                 return NextResponse.json({message:"Failed to get role"},{status:401})
             }
-            const context= await CheckSession(req);
+            const context= await CheckSession();
             if(!context){
                 return NextResponse.json({message:"Unauthorized"},{status:401})
             }

@@ -7,9 +7,9 @@ import { CheckSession } from "@/lib/checkSession";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest,
-  { params }: { params: { taskId: string } }) {
+  { params }: { params: Promise<{ taskId: string }> }) {
     try{    
-         const context = await CheckSession(req);
+         const context = await CheckSession();
             if (!context) {
               return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
             }

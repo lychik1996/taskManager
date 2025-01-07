@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workspaceId: string } }
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
    
@@ -21,7 +21,7 @@ export async function POST(
         { status: 401 }
       );
     }
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

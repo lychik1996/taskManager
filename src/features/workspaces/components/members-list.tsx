@@ -20,7 +20,7 @@ import { useDeleteMember } from '@/features/members/api/use-delete-member';
 import { useUpdateMember } from '@/features/members/api/use-update-member';
 import { MemberRole } from '@/features/members/types';
 import { useConfirm } from '@/hooks/use-confirm';
-import { useRouter } from 'next/navigation';
+
 
 export default function MembersList() {
   const workspaceId = useWorkspaceId();

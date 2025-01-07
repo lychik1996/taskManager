@@ -8,7 +8,7 @@ import { ID } from 'node-appwrite';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workspaceId: string } }
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
     const { workspaceId } = await params;
@@ -25,7 +25,7 @@ export async function POST(
       throw new Error('Something went wrong');
     }
     
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

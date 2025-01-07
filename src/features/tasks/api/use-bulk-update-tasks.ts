@@ -11,7 +11,7 @@ import { Task, TaskStatus } from '../types';
 type useBulkUpdateTasksRequest = {$id:string;position:number; status:TaskStatus}[];
 type useBulkUpdateTasksResponse = Task[]
 
-const useBulkUpdateTasks = async (
+const bulkUpdateTasks = async (
   data: useBulkUpdateTasksRequest,
   
 ): Promise<useBulkUpdateTasksResponse> => {
@@ -20,12 +20,12 @@ const useBulkUpdateTasks = async (
   return res.data.updatedTasks;
 };
 
-export const useuseBulkUpdateTasks = () => {
+export const useBulkUpdateTasks = () => {
   
   const queryClient = useQueryClient();
   return useMutation<useBulkUpdateTasksResponse, Error, useBulkUpdateTasksRequest>({
     mutationFn: async (data) => {
-      return await useBulkUpdateTasks(data);
+      return await bulkUpdateTasks(data);
     },
     onSuccess: () => {
       toast.success('Tasks updated');

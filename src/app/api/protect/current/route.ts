@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
 
-  const context = await CheckSession(req);
+  const context = await CheckSession();
   if (!context) {
     return NextResponse.json({message:"Unauthorized"},{status:401})
   }

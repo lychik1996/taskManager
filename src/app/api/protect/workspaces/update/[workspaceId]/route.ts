@@ -9,7 +9,7 @@ import { ID } from 'node-appwrite';
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { workspaceId: string } }
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
     const formData = await req.formData();
@@ -23,7 +23,7 @@ export async function PATCH(
         { status: 401 }
       );
     }
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

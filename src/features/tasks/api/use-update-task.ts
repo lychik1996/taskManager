@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { createTaskSchema } from '../schemas';
 import { Models } from 'node-appwrite';
-import { useRouter } from 'next/navigation';
+
 
 type UpdateTaskRequest = Partial<z.infer<typeof createTaskSchema>>&{param:string};
 type UpdateTaskResponse = Models.Document & {
@@ -25,7 +25,7 @@ const updateTask = async (
 };
 
 export const useUpdateTask = () => {
-    const router = useRouter();
+  
   const queryClient = useQueryClient();
   return useMutation<UpdateTaskResponse, Error, UpdateTaskRequest>({
     mutationFn: async (data) => {
@@ -33,7 +33,7 @@ export const useUpdateTask = () => {
     },
     onSuccess: (data) => {
       toast.success('Task updated');
-      router.refresh();
+      
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['task',data.$id] });
     },

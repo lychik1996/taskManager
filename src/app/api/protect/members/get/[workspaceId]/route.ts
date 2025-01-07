@@ -5,9 +5,9 @@ import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 import { Query } from 'node-appwrite';
 
-export async function GET(req: NextRequest,{ params }: { params: { workspaceId: string } }) {
+export async function GET(req: NextRequest,{ params }: { params: Promise<{ workspaceId: string }> }) {
   try {
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

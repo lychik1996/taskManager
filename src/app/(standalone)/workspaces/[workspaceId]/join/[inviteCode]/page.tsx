@@ -4,9 +4,9 @@ import { getWorkspaceInfo } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
 
 interface WorkspaceJoinPageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
+  }>;
 }
 
 export default async function WorkspaceJoinPage({

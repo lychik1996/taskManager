@@ -5,7 +5,7 @@ import { Query } from 'node-appwrite';
 
 export async function GET(req: NextRequest) {
   try {
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unautarized' }, { status: 401 });
     }

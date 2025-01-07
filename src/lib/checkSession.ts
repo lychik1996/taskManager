@@ -1,6 +1,6 @@
 
 import { cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
+
 import {
   Client,
   Account,
@@ -19,7 +19,7 @@ export type AdditionalContext = {
   user: Models.User<Models.Preferences>;
 };
 
-export async function CheckSession(req:NextRequest): Promise<AdditionalContext | null> {
+export async function CheckSession(): Promise<AdditionalContext | null> {
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);

@@ -9,7 +9,7 @@ import { Task, TaskStatus } from '@/features/tasks/types';
 
 export async function POST(req: NextRequest) {
   try {
-    const context = await CheckSession(req);
+    const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

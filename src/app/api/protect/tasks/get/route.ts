@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   
   try {
     const { users } = await createAdminClient();
-    const context = await CheckSession(req);
+    const context = await CheckSession();
 
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
