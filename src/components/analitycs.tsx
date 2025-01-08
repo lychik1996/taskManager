@@ -23,7 +23,7 @@ export default function Analitycs({ data }: AnalitycsProps) {
     typeof data.incomleteTaskCount === 'number' &&
     typeof data.incompleteTaskDifference === 'number';
   return (
-    <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0 " >
+    <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0 ">
       <div className="w-full flex flex-row">
         <div className="flex items-center flex-1">
           <AnalitycsCard
@@ -72,7 +72,7 @@ export default function Analitycs({ data }: AnalitycsProps) {
           </div>
         )}
       </div>
-      <ScrollBar orientation='horizontal'/>
+      <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );
 }

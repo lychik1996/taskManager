@@ -48,7 +48,7 @@ export default function CreateTaskForm({
   const workspaceId = useWorkspaceId();
   const router = useRouter();
   const { mutate, isPending } = useCreateTask();
-  const {isStatus} = useCreateTaskModal();
+  const { isStatus } = useCreateTaskModal();
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
     defaultValues: {
@@ -56,7 +56,7 @@ export default function CreateTaskForm({
       name: '',
       dueDate: undefined,
       assigneeId: undefined,
-      status: isStatus?isStatus:undefined,
+      status: isStatus ? isStatus : undefined,
       projectId: undefined,
     },
   });
@@ -66,7 +66,7 @@ export default function CreateTaskForm({
       {
         onSuccess: (data) => {
           form.reset();
-         onCancel?.();
+          onCancel?.();
         },
       }
     );

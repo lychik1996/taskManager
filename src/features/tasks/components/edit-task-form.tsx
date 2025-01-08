@@ -16,9 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 
 import { createTaskSchema } from '../schemas';
 import DatePicker from '@/components/date-picker';
@@ -38,34 +36,37 @@ interface EditTaskFormProps {
   onCancel?: () => void;
   projectOptions: { id: string; name: string; imageUrl: string }[];
   memberOptions: { id: string; name: string }[];
-  initialValues:Task;
+  initialValues: Task;
 }
 
 export default function EditTaskForm({
   onCancel,
   memberOptions,
   projectOptions,
-  initialValues
+  initialValues,
 }: EditTaskFormProps) {
   // const workspaceId = useWorkspaceId();
   // const router = useRouter();
   const { mutate, isPending } = useUpdateTask();
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
-    resolver: zodResolver(createTaskSchema.omit({ workspaceId: true, description:true })),
+    resolver: zodResolver(
+      createTaskSchema.omit({ workspaceId: true, description: true })
+    ),
     defaultValues: {
       ...initialValues,
-      dueDate:initialValues.dueDate?new Date(initialValues.dueDate):undefined
+      dueDate: initialValues.dueDate
+        ? new Date(initialValues.dueDate)
+        : undefined,
     },
   });
   const onSubmit = (values: z.infer<typeof createTaskSchema>) => {
-    
     mutate(
-      {...values,param:initialValues.$id},
+      { ...values, param: initialValues.$id },
       {
         onSuccess: (data) => {
           form.reset();
-         onCancel?.();
+          onCancel?.();
         },
       }
     );

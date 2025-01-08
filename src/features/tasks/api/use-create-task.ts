@@ -4,11 +4,10 @@ import { z } from 'zod';
 
 import { toast } from 'sonner';
 import { createTaskSchema } from '../schemas';
-import { Models } from 'node-appwrite';
 import { Task } from '../types';
 
 type CreateTaskRequest = z.infer<typeof createTaskSchema>;
-type CreateTaskResponse = Task
+type CreateTaskResponse = Task;
 
 const postCreateTask = async (
   data: CreateTaskRequest
@@ -28,8 +27,12 @@ export const useCreateTask = () => {
     onSuccess: (data) => {
       toast.success('Task created');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({queryKey:['project-analytics',data.projectId]})
-      queryClient.invalidateQueries({queryKey:['workspace-analytics',data.workspaceId]})
+      queryClient.invalidateQueries({
+        queryKey: ['project-analytics', data.projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['workspace-analytics', data.workspaceId],
+      });
     },
     onError: () => {
       toast.error('Failed to create task');

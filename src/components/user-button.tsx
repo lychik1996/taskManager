@@ -18,7 +18,7 @@ interface User {
 }
 export default function UserButton() {
   const { data, isLoading } = useCurrent();
-  const {mutate:logout} = useLogout();
+  const { mutate: logout } = useLogout();
   const user: User | null = data;
 
   if (isLoading) {

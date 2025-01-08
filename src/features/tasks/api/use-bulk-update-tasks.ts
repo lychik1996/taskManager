@@ -1,37 +1,46 @@
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-
 import { toast } from 'sonner';
 
 import { Task, TaskStatus } from '../types';
 import { useProjectId } from '@/features/projects/hooks/use-project-id';
-import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 
-type useBulkUpdateTasksRequest = {$id:string;position:number; status:TaskStatus}[];
-type useBulkUpdateTasksResponse = Task[]
+type useBulkUpdateTasksRequest = {
+  $id: string;
+  position: number;
+  status: TaskStatus;
+}[];
+type useBulkUpdateTasksResponse = Task[];
 
 const bulkUpdateTasks = async (
-  data: useBulkUpdateTasksRequest,
-  
+  data: useBulkUpdateTasksRequest
 ): Promise<useBulkUpdateTasksResponse> => {
   const res = await axios.post('/api/protect/tasks/bulk-update', data);
-  
+
   return res.data.updatedTasks;
 };
 
 export const useBulkUpdateTasks = () => {
   const projectId = useProjectId();
   const queryClient = useQueryClient();
-  return useMutation<useBulkUpdateTasksResponse, Error, useBulkUpdateTasksRequest>({
+  return useMutation<
+    useBulkUpdateTasksResponse,
+    Error,
+    useBulkUpdateTasksRequest
+  >({
     mutationFn: async (data) => {
       return await bulkUpdateTasks(data);
     },
     onSuccess: (data) => {
       toast.success('Tasks updated');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({queryKey:['project-analytics',projectId]});
-      queryClient.invalidateQueries({queryKey:['workspace-analytics',data[0].workspaceId]})
+      queryClient.invalidateQueries({
+        queryKey: ['project-analytics', projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['workspace-analytics', data[0].workspaceId],
+      });
     },
     onError: () => {
       toast.error('Failed to update tasks');

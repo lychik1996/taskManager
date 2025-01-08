@@ -1,15 +1,8 @@
-import {
-  DATABASE_ID,
-  IMAGES_BUCKET_ID,
-  PROJECTS_ID,
-  WORKSPACES_ID,
-} from '@/config';
-import { MemberRole } from '@/features/members/types';
+import { DATABASE_ID, PROJECTS_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { Project } from '@/features/projects/types';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
-
 
 export async function DELETE(
   req: NextRequest,
@@ -17,7 +10,7 @@ export async function DELETE(
 ) {
   try {
     const { projectId } = await params;
-    console.log(projectId)
+    console.log(projectId);
     if (!projectId) {
       return NextResponse.json(
         { message: 'projectId is missing' },

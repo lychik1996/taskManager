@@ -1,6 +1,6 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
-import { Task, TaskStatus } from '../types';
+import { Task } from '../types';
 import { ArrowUpDown, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProjectAvatar from '@/features/projects/components/project-avatar';
@@ -119,18 +119,17 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    id:"actions",
-    cell:({row})=>{
-        const id=row.original.$id;
-        const projectId = row.original.projectId
-      return(
+    id: 'actions',
+    cell: ({ row }) => {
+      const id = row.original.$id;
+      const projectId = row.original.projectId;
+      return (
         <TaskActions id={id} projectId={projectId}>
-            <Button variant="ghost" className='size-8 p-0'>
-                <MoreVertical className='size-4'/>
-            </Button>
+          <Button variant="ghost" className="size-8 p-0">
+            <MoreVertical className="size-4" />
+          </Button>
         </TaskActions>
-      )
-    }
-    
-  }
+      );
+    },
+  },
 ];

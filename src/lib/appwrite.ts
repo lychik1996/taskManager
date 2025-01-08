@@ -1,40 +1,40 @@
-import "server-only";
-import{Client,Account,Storage,Users,Databases} from "node-appwrite";
-import { cookies } from "next/headers";
+import 'server-only';
+import { Client, Account, Users, Databases } from 'node-appwrite';
+import { cookies } from 'next/headers';
 
-export async function  createSessionClient() {
-    const client = new Client()
-      .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
-      const session = await cookies();
-      
-          const cookie = session.get('session');
-      
-          if (!cookie || !cookie.value) {
-            throw new Error("Unauthorized")
-          }
-          client.setSession(cookie.value);
-          return {
-            get account(){
-                return new Account(client)
-            },
-            get databases(){
-                return new Databases(client)
-            }
-          }
+export async function createSessionClient() {
+  const client = new Client()
+    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
+  const session = await cookies();
+
+  const cookie = session.get('session');
+
+  if (!cookie || !cookie.value) {
+    throw new Error('Unauthorized');
+  }
+  client.setSession(cookie.value);
+  return {
+    get account() {
+      return new Account(client);
+    },
+    get databases() {
+      return new Databases(client);
+    },
+  };
 }
 export async function createAdminClient() {
-    const client = new Client()
+  const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
-    .setKey(process.env.NEXT_APPWRITE_KEY!)
+    .setKey(process.env.NEXT_APPWRITE_KEY!);
 
-    return{
-        get account(){
-            return new Account(client)
-        },
-        get users(){
-            return new Users(client)
-        }
-    }
+  return {
+    get account() {
+      return new Account(client);
+    },
+    get users() {
+      return new Users(client);
+    },
+  };
 }

@@ -1,25 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { Models } from "node-appwrite";
-import { Member } from "../types";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+import { Member } from '../types';
 
 interface UseGetMembersProps {
   workspaceId: string;
 }
 
-// interface PopulatedMember {
-//   name: string;
-//   email: string;
-//   $id: string;
-//   $collectionId: string;
-//   $databaseId: string;
-//   $createdAt: string;
-//   $updatedAt: string;
-//   $permissions: string[];
-// }
-
 type MembersResponse = {
-  total:number;
+  total: number;
   documents: Member[];
 };
 
@@ -30,13 +19,13 @@ const getMembers = async ({ workspaceId }: UseGetMembersProps) => {
 
 export const useGetMembers = ({ workspaceId }: UseGetMembersProps) => {
   const query = useQuery({
-    queryKey: ["members", workspaceId],
+    queryKey: ['members', workspaceId],
     queryFn: async () => {
       if (!workspaceId) {
-        throw new Error("Workspace ID is required"); 
+        throw new Error('Workspace ID is required');
       }
       const members = await getMembers({ workspaceId });
-      return members; 
+      return members;
     },
     retry: 0,
   });

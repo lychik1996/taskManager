@@ -21,38 +21,36 @@ export default function TaskActions({
   id,
   projectId,
 }: TaskActionsProps) {
-    const workspaceId = useWorkspaceId();
-    const router =useRouter();
+  const workspaceId = useWorkspaceId();
+  const router = useRouter();
 
-    const {open} = useEditTaskModal();
+  const { open } = useEditTaskModal();
 
-    const [ConfirmDialog, confirm]=useConfirm(
-        "Delete task",
-        "This action cannot be undone.",
-        "destructive"
-    )
-    const {mutate,isPending} = useDeleteTask();
-    const onDelete =  async()=>{
-        const ok = await confirm();
-        if(!ok) return;
-        mutate({param:id});
-    }
-    const onOpenTask = ()=>{
-        router.push(`/workspaces/${workspaceId}/tasks/${id}`)
-    }
-    const onOpenProject = ()=>{
-        router.push(`/workspaces/${workspaceId}/projects/${projectId}`)
-    }
+  const [ConfirmDialog, confirm] = useConfirm(
+    'Delete task',
+    'This action cannot be undone.',
+    'destructive'
+  );
+  const { mutate, isPending } = useDeleteTask();
+  const onDelete = async () => {
+    const ok = await confirm();
+    if (!ok) return;
+    mutate({ param: id });
+  };
+  const onOpenTask = () => {
+    router.push(`/workspaces/${workspaceId}/tasks/${id}`);
+  };
+  const onOpenProject = () => {
+    router.push(`/workspaces/${workspaceId}/projects/${projectId}`);
+  };
   return (
     <div className="flex justify-end">
-      
-        <ConfirmDialog/>
+      <ConfirmDialog />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem
             onClick={onOpenTask}
-            
             className="font-medium p-[10px] cursor-pointer"
           >
             <ExternalLinkIcon className=" mr-2 stroke-2" />
@@ -60,15 +58,13 @@ export default function TaskActions({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={onOpenProject}
-            
             className="font-medium p-[10px] cursor-pointer"
           >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Open Project
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={()=>open(id)}
-            
+            onClick={() => open(id)}
             className="font-medium p-[10px] cursor-pointer"
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />

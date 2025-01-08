@@ -1,32 +1,33 @@
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 interface Workspace {
-    $id: string;
-    name: string;
-    userId: string;
-    imageUrl: string | null; 
-    $createdAt: string;
-  }
-  
- 
-  interface WorkspacesResponse {
-    documents: Workspace[];
-    total:number;
-  }
-const getWorkspaces= async()=>{
-    const res = await axios.get('/api/protect/workspaces/get');
-    return res.data;
+  $id: string;
+  name: string;
+  userId: string;
+  imageUrl: string | null;
+  $createdAt: string;
 }
 
-export const useGetWorkspaces = ()=>{
-    const query =useQuery({
-        queryKey:['workspaces'],
-        queryFn:async()=>{
-            const data = await getWorkspaces();
-            const workspaces:WorkspacesResponse | null | undefined = data?data.workspaces:null
-            return workspaces;
-        },
-        retry:0
-    })
-    return query;
+interface WorkspacesResponse {
+  documents: Workspace[];
+  total: number;
 }
+const getWorkspaces = async () => {
+  const res = await axios.get('/api/protect/workspaces/get');
+  return res.data;
+};
+
+export const useGetWorkspaces = () => {
+  const query = useQuery({
+    queryKey: ['workspaces'],
+    queryFn: async () => {
+      const data = await getWorkspaces();
+      const workspaces: WorkspacesResponse | null | undefined = data
+        ? data.workspaces
+        : null;
+      return workspaces;
+    },
+    retry: 0,
+  });
+  return query;
+};

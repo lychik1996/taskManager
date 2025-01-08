@@ -36,7 +36,7 @@ export default function CreateProjectForm({
   const { mutate, isPending } = useCreateProject();
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof createProjectShcema>>({
-    resolver: zodResolver(createProjectShcema.omit({workspaceId:true})),
+    resolver: zodResolver(createProjectShcema.omit({ workspaceId: true })),
     defaultValues: {
       name: '',
     },
@@ -50,7 +50,7 @@ export default function CreateProjectForm({
     mutate(finalValue, {
       onSuccess: (data) => {
         form.reset();
-        router.push(`/workspaces/${data.workspaceId}/projects/${data.$id}`)
+        router.push(`/workspaces/${data.workspaceId}/projects/${data.$id}`);
       },
     });
   };

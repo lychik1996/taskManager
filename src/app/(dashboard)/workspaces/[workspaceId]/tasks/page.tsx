@@ -6,7 +6,7 @@ export default async function TaskPage() {
   const user = await getCurrent();
   if (!user) redirect('/sign-in');
   return (
-    <div className='h-full flex flex-col'>
+    <div className="h-full flex flex-col">
       <TaskViewSwitcher />
     </div>
   );

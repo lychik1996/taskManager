@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-
 import { TaskStatus } from '../types';
-
-
 
 type TaskDocument = {
   workspaceId: string;
@@ -28,7 +25,7 @@ type TaskDocument = {
     $id: string;
     $createdAt: string;
     $updatedAt: string;
-    name:string;
+    name: string;
   };
   project: {
     workspaceId: string;
@@ -40,24 +37,17 @@ type TaskDocument = {
   };
 };
 
-
-
 const getTask = async (param: string) => {
- 
-
   const res = await axios.get(`/api/protect/tasks/getOne/${param}`);
   return res.data as TaskDocument;
 };
 
 export const useGetTask = (taskId: string) => {
   const query = useQuery({
-    queryKey: [
-      'task',
-      taskId
-    ],
+    queryKey: ['task', taskId],
     queryFn: async () => {
       const res = await getTask(taskId);
-      
+
       return res;
     },
     retry: 0,

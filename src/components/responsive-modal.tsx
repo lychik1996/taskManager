@@ -19,8 +19,11 @@ export default function ResponsiveModal({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent aria-describedby={undefined} className="w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]">
-        <DialogTitle className="sr-only">Dialog Title</DialogTitle>
+        <DialogContent
+          aria-describedby={undefined}
+          className="w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]"
+        >
+          <DialogTitle className="sr-only">Dialog Title</DialogTitle>
           {children}
         </DialogContent>
       </Dialog>
@@ -29,7 +32,7 @@ export default function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent aria-describedby={undefined}>
-      <DialogTitle className="sr-only">Dialog Title</DialogTitle>
+        <DialogTitle className="sr-only">Dialog Title</DialogTitle>
         <div className="overflow-y-auto hide-scrollbar max-h-[85vh]">
           {children}
         </div>

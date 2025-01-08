@@ -1,4 +1,3 @@
-
 import { cookies } from 'next/headers';
 
 import {
@@ -24,9 +23,8 @@ export async function CheckSession(): Promise<AdditionalContext | null> {
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
 
-  
-  const session =  (await cookies()).get('session');
-  
+  const session = (await cookies()).get('session');
+
   if (!session) {
     return null;
   }
@@ -47,6 +45,6 @@ export async function CheckSession(): Promise<AdditionalContext | null> {
     };
     return context;
   } catch {
-    return null
+    return null;
   }
 }

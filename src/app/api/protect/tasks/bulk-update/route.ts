@@ -4,7 +4,7 @@ import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { DATABASE_ID, TASKS_ID } from '@/config';
-import { ID, Query } from 'node-appwrite';
+import { Query } from 'node-appwrite';
 import { Task, TaskStatus } from '@/features/tasks/types';
 
 export async function POST(req: NextRequest) {
@@ -15,9 +15,10 @@ export async function POST(req: NextRequest) {
     }
     const databases = context.databases;
     const user = context.user;
-    
-    const tasks: { $id: string; status: TaskStatus; position: number }[] = await req.json();
-    
+
+    const tasks: { $id: string; status: TaskStatus; position: number }[] =
+      await req.json();
+
     const tasksToUpdated = await databases.listDocuments<Task>(
       DATABASE_ID,
       TASKS_ID,
@@ -28,19 +29,19 @@ export async function POST(req: NextRequest) {
         ),
       ]
     );
-    
+
     const workspaceIds = new Set(
       tasksToUpdated.documents.map((task) => task.workspaceId)
     );
-    
+
     if (workspaceIds.size !== 1) {
       return NextResponse.json(
         { message: 'All tasks must belong to the same workspace' },
         { status: 400 }
       );
     }
-    
-    const workspaceId =workspaceIds.values().next().value
+
+    const workspaceId = workspaceIds.values().next().value;
 
     if (!workspaceId) {
       return NextResponse.json(
@@ -48,28 +49,26 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     const member = await getMember({
       databases,
       workspaceId,
       userId: user.$id,
     });
-    if(!member){
-        return NextResponse.json({message:"Unauthorized"},{status:401})
+    if (!member) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const updatedTasks = await Promise.all(
-        tasks.map(async(task)=>{
-            const {$id, status, position} = task;
-            return databases.updateDocument<Task>(
-                DATABASE_ID,
-                TASKS_ID,
-                $id,
-                {status,position}
-            )
-        })
+      tasks.map(async (task) => {
+        const { $id, status, position } = task;
+        return databases.updateDocument<Task>(DATABASE_ID, TASKS_ID, $id, {
+          status,
+          position,
+        });
+      })
     );
-    return NextResponse.json({updatedTasks})
+    return NextResponse.json({ updatedTasks });
   } catch {
     return NextResponse.json(
       { message: 'Something went wrong' },

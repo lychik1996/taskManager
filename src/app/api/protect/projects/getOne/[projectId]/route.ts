@@ -3,40 +3,40 @@ import { getMember } from '@/features/members/utils';
 import { Project } from '@/features/projects/types';
 
 import { CheckSession } from '@/lib/checkSession';
-import {  NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest,
-  { params }: { params: Promise<{ projectId: string }>}
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    
-    const {projectId} = await params;
+    const { projectId } = await params;
     const context = await CheckSession();
-    
+
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     const databases = context.databases;
     const user = context.user;
-    
+
     const project = await databases.getDocument<Project>(
-        DATABASE_ID,
-        PROJECTS_ID,
-        projectId
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
     );
-    
+
     const member = await getMember({
-        databases,
-        workspaceId:project.workspaceId,
-        userId:user.$id
+      databases,
+      workspaceId: project.workspaceId,
+      userId: user.$id,
     });
-    
-    if(!member){
-        return NextResponse.json({message:"Unauthorized"},{status:401})
+
+    if (!member) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    
-    return NextResponse.json({project})
+
+    return NextResponse.json({ project });
   } catch {
     return NextResponse.json(
       { message: 'Something went wrong' },

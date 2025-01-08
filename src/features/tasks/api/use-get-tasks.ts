@@ -1,20 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-
 import { TaskStatus } from '../types';
 
 type Nullable<T> = {
   [K in keyof T]?: T[K] | null;
 };
 type TasksRequest = Nullable<{
-  search: string,
-  dueDate:string
-  status: TaskStatus ;
-  workspaceId: string ;
-  projectId: string; 
+  search: string;
+  dueDate: string;
+  status: TaskStatus;
+  workspaceId: string;
+  projectId: string;
   assigneeId: string;
-}>
+}>;
 
 type TaskDocument = {
   workspaceId: string;
@@ -38,7 +37,7 @@ type TaskDocument = {
     $id: string;
     $createdAt: string;
     $updatedAt: string;
-    name:string;
+    name: string;
   };
   project: {
     workspaceId: string;
@@ -56,8 +55,6 @@ type TasksResponse = {
 };
 
 const getTasks = async (data: TasksRequest) => {
- 
-
   const res = await axios.get('/api/protect/tasks/get/', {
     params: data,
   });
@@ -78,7 +75,7 @@ export const useGetTasks = (data: TasksRequest) => {
     ],
     queryFn: async () => {
       const res = await getTasks(data);
-      
+
       return res;
     },
     retry: 0,

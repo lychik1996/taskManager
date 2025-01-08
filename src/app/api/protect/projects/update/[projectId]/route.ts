@@ -2,7 +2,6 @@ import {
   DATABASE_ID,
   IMAGES_BUCKET_ID,
   PROJECTS_ID,
-  WORKSPACES_ID,
 } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { Project } from '@/features/projects/types';
@@ -16,11 +15,11 @@ export async function PATCH(
 ) {
   try {
     const { projectId } = await params;
-    console.log(projectId)
+    console.log(projectId);
     const formData = await req.formData();
     const name = formData.get('name') as string;
     const image = formData.get('image') as File;
-    console.log(name)
+    console.log(name);
     if (!projectId) {
       return NextResponse.json(
         { message: 'ProjectId is missing' },

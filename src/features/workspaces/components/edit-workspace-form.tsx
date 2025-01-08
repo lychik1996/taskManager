@@ -39,8 +39,10 @@ export default function EditWorkSpaceForm({
 }: EditWorkSpaceFormProps) {
   const router = useRouter();
   const { mutate, isPending } = useUpdateWorkSpace();
-  const {mutate:deleteWorkspace, isPending:isDeletingWorkspace} =useDeleteWorkSpace();
-  const {mutate:resetInviteCode, isPending:isResettingInviteCode} =useResetInviteCode();
+  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
+    useDeleteWorkSpace();
+  const { mutate: resetInviteCode, isPending: isResettingInviteCode } =
+    useResetInviteCode();
 
   const [DeleteDialog, confirmDelete] = useConfirm(
     'Delete Workspace',
@@ -73,12 +75,15 @@ export default function EditWorkSpaceForm({
   const handleDelete = async () => {
     const ok = await confirmDelete();
     if (!ok) return;
-    deleteWorkspace({param:initialValues.$id},{
-      onSuccess:({data})=>{
-        console.log(data)
-        router.push('/');
+    deleteWorkspace(
+      { param: initialValues.$id },
+      {
+        onSuccess: ({ data }) => {
+          console.log(data);
+          router.push('/');
+        },
       }
-    })
+    );
   };
 
   const onSubmit = (values: z.infer<typeof updateWorkspaceShcema>) => {
@@ -93,7 +98,6 @@ export default function EditWorkSpaceForm({
     mutate(finalValue, {
       onSuccess: (data) => {
         // form.reset();
-
         // router.push(`/workspaces/${data?.$id}`);
       },
     });
@@ -105,29 +109,30 @@ export default function EditWorkSpaceForm({
       form.setValue('image', file);
     }
   };
-  
-  
-  const handleCopyInviteLink = ()=>{
+
+  const handleCopyInviteLink = () => {
     if (!fullInviteLink) {
       toast.error('Invite link is not available yet');
       return;
     }
-    navigator.clipboard.writeText(fullInviteLink)
-    .then(()=>toast.success("Invite link copied to clipboard"))
-  }
+    navigator.clipboard
+      .writeText(fullInviteLink)
+      .then(() => toast.success('Invite link copied to clipboard'));
+  };
   const handleResetInviteCode = async () => {
     const ok = await confirmReset();
     if (!ok) return;
-    resetInviteCode({param:initialValues.$id},{
-      onSuccess:()=>{
-       
+    resetInviteCode(
+      { param: initialValues.$id },
+      {
+        onSuccess: () => {},
       }
-    })
+    );
   };
   return (
     <div className="flex flex-col gap-y-4">
-      <DeleteDialog/>
-      <ResetDialog/>
+      <DeleteDialog />
+      <ResetDialog />
       <Card className="w-full h-full border-node shadow-none">
         <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
           <Button
@@ -270,19 +275,19 @@ export default function EditWorkSpaceForm({
             <p className="text-sm text-muted-foreground">
               Use the invite link to add members to your workspace.
             </p>
-            <div className='mt-4'>
-                  <div className='flex items-center gap-x-2'>
-                    <Input disabled value={fullInviteLink}/>
-                    <Button
-                    onClick={handleCopyInviteLink}
-                    variant="secondary"
-                    className='size-12'
-                    >
-                      <CopyIcon className='size-5'/>
-                    </Button>
-                  </div>
+            <div className="mt-4">
+              <div className="flex items-center gap-x-2">
+                <Input disabled value={fullInviteLink} />
+                <Button
+                  onClick={handleCopyInviteLink}
+                  variant="secondary"
+                  className="size-12"
+                >
+                  <CopyIcon className="size-5" />
+                </Button>
+              </div>
             </div>
-            <DottedSeparator className='py-7'/>
+            <DottedSeparator className="py-7" />
             <Button
               className="mt-6 w-fit ml-auto"
               size="sm"
@@ -304,7 +309,7 @@ export default function EditWorkSpaceForm({
               Deleting a workspace is irreversible and will remove all
               associated data.
             </p>
-            <DottedSeparator className='py-7'/>
+            <DottedSeparator className="py-7" />
             <Button
               className="mt-6 w-fit ml-auto"
               size="sm"
@@ -318,7 +323,6 @@ export default function EditWorkSpaceForm({
           </div>
         </CardContent>
       </Card>
-
     </div>
   );
 }

@@ -14,16 +14,14 @@ interface TaskOverviewProps {
 }
 
 export default function TaskOverview({ task }: TaskOverviewProps) {
-    const {open} = useEditTaskModal();
-  
-    return (
+  const { open } = useEditTaskModal();
+
+  return (
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold"> Overview</p>
-          <Button
-          onClick={()=>open(task.$id)}
-          size="sm" variant="secondary">
+          <Button onClick={() => open(task.$id)} size="sm" variant="secondary">
             <PencilIcon className="size-4 mr-2" />
             Edit
           </Button>

@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   ColumnDef,
   flexRender,
@@ -21,7 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button';
 
 interface DataTableProps<TData, TValue> {
@@ -33,10 +32,10 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-      );
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const table = useReactTable({
     data,
     columns,
@@ -54,7 +53,6 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-        
       <div className="rounded-md border">
         <Table>
           <TableHeader>

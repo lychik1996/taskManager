@@ -5,17 +5,16 @@ import CreateTaskModal from '@/features/tasks/components/create-task-modal';
 import EditTaskModal from '@/features/tasks/components/edit-task-modal';
 import CreateWorkspaceModal from '@/features/workspaces/components/create-workspace-modal';
 
-
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen">
-      <CreateWorkspaceModal/>
-      <CreateProjectModal/>
-      <CreateTaskModal/>
-      <EditTaskModal/>
+      <CreateWorkspaceModal />
+      <CreateProjectModal />
+      <CreateTaskModal />
+      <EditTaskModal />
       <div className="flex h-full w-full">
         <div className="fixed left-0 top-0 hidden lg:block lg:w-[265px] h-full overflow-y-auto">
           <Sidebar />

@@ -8,22 +8,22 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 export default function MobileSidebar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const pathname= usePathname();
-    
-    useEffect(()=>{
-        setIsOpen(false)
-    },[pathname])
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
   return (
-    <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen} >
-      <SheetTrigger asChild >
-        <Button variant="secondary"className="lg:hidden " >
+    <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>
+        <Button variant="secondary" className="lg:hidden ">
           <MenuIcon className="size-5 text-neutral-500 " />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0" aria-describedby={undefined}>
-        <SheetTitle className='sr-only'> Navigation menu</SheetTitle>
-          <Sidebar />
+        <SheetTitle className="sr-only"> Navigation menu</SheetTitle>
+        <Sidebar />
       </SheetContent>
     </Sheet>
   );

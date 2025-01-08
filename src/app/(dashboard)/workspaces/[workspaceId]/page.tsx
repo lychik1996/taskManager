@@ -7,5 +7,5 @@ export default async function WorkspaceId() {
   if (!user) {
     redirect('/sign-in');
   }
-  return <WorkspaceIdClient/>
+  return <WorkspaceIdClient />;
 }

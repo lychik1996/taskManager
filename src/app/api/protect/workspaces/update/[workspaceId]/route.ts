@@ -1,11 +1,9 @@
-
 import { DATABASE_ID, IMAGES_BUCKET_ID, WORKSPACES_ID } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { getMember } from '@/features/members/utils';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 import { ID } from 'node-appwrite';
-
 
 export async function PATCH(
   req: NextRequest,
@@ -40,25 +38,42 @@ export async function PATCH(
     if (!member || member.role !== MemberRole.ADMIN) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    
 
     let uploadedImageUrl: string | undefined;
     if (image instanceof File) {
-      const file = await storage.createFile(IMAGES_BUCKET_ID, ID.unique(), image);
-      const arrayBuffer = await storage.getFilePreview(IMAGES_BUCKET_ID, file.$id);
-      uploadedImageUrl = `data:image/png;base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+      const file = await storage.createFile(
+        IMAGES_BUCKET_ID,
+        ID.unique(),
+        image
+      );
+      const arrayBuffer = await storage.getFilePreview(
+        IMAGES_BUCKET_ID,
+        file.$id
+      );
+      uploadedImageUrl = `data:image/png;base64,${Buffer.from(
+        arrayBuffer
+      ).toString('base64')}`;
     }
 
-    const currentWorkspace = await databases.getDocument(DATABASE_ID, WORKSPACES_ID, workspaceId);
-    
+    const currentWorkspace = await databases.getDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
     if (!uploadedImageUrl) {
       uploadedImageUrl = currentWorkspace.imageUrl;
     }
 
-    const workspace = await databases.updateDocument(DATABASE_ID, WORKSPACES_ID, workspaceId, {
-      name,
-      imageUrl: uploadedImageUrl,
-    });
+    const workspace = await databases.updateDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId,
+      {
+        name,
+        imageUrl: uploadedImageUrl,
+      }
+    );
     return NextResponse.json(workspace);
   } catch {
     return NextResponse.json(

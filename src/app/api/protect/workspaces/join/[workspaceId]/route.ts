@@ -12,7 +12,7 @@ export async function POST(
 ) {
   try {
     const { workspaceId } = await params;
-   
+
     if (!workspaceId) {
       return NextResponse.json(
         { message: 'WorkspaceId is missing' },
@@ -24,7 +24,7 @@ export async function POST(
     if (!code) {
       throw new Error('Something went wrong');
     }
-    
+
     const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
