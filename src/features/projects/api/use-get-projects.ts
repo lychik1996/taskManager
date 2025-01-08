@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Models } from "node-appwrite";
+import { Project } from "../types";
 
 interface UseGetProjectsProps {
   workspaceId: string;
@@ -8,7 +9,7 @@ interface UseGetProjectsProps {
 
 
 
-type ProjectsResponse = Models.DocumentList<Models.Document>
+type ProjectsResponse = Models.DocumentList<Project>
 
 const getProjects = async ({ workspaceId }: UseGetProjectsProps) => {
   const res = await axios.get(`/api/protect/projects/get/${workspaceId}`);

@@ -1,24 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Models } from "node-appwrite";
+import { Member } from "../types";
 
 interface UseGetMembersProps {
   workspaceId: string;
 }
 
-interface PopulatedMember {
-  name: string;
-  email: string;
-  $id: string;
-  $collectionId: string;
-  $databaseId: string;
-  $createdAt: string;
-  $updatedAt: string;
-  $permissions: string[];
-}
+// interface PopulatedMember {
+//   name: string;
+//   email: string;
+//   $id: string;
+//   $collectionId: string;
+//   $databaseId: string;
+//   $createdAt: string;
+//   $updatedAt: string;
+//   $permissions: string[];
+// }
 
-type MembersResponse = Omit<Models.DocumentList<Models.Document>, "documents"> & {
-  documents: PopulatedMember[];
+type MembersResponse = {
+  total:number;
+  documents: Member[];
 };
 
 const getMembers = async ({ workspaceId }: UseGetMembersProps) => {
