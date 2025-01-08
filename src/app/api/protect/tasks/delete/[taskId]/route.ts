@@ -51,7 +51,7 @@ export async function DELETE(
       taskId
     )
    
-    return NextResponse.json({data:{$id:task.$id}});
+    return NextResponse.json({data:{$id:task.$id, projectId:task.projectId}});
   } catch {
     return NextResponse.json(
       { message: 'Something went wrong' },

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 
 type DeleteTaskRequest =  {param:string};
-type DeleteTaskResponse = {data:{$id:string}}
+type DeleteTaskResponse = {data:{$id:string, projectId:string}}
 
 const deleteTask = async ({param}:DeleteTaskRequest):Promise<DeleteTaskResponse>=>{
    
@@ -27,6 +27,7 @@ export const useDeleteTask = () => {
       toast.success("Task deleted");
       queryClient.invalidateQueries({queryKey:['tasks']})
       queryClient.invalidateQueries({queryKey:["task",data.$id]})
+      queryClient.invalidateQueries({queryKey:['project-analytics',data.projectId]})
     },
     onError:()=>{
       toast.error("Failed to deleted task")

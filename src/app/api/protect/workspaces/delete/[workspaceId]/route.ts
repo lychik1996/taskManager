@@ -21,6 +21,7 @@ export async function DELETE(
         { status: 401 }
       );
     }
+    
     const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -28,13 +29,13 @@ export async function DELETE(
     const databases = context.databases;
     
     const user = context.user;
-
+    
     const member = await getMember({
       databases,
       workspaceId,
       userId: user.$id,
     });
-
+    
     if (!member || member.role !== MemberRole.ADMIN) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

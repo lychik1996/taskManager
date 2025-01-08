@@ -5,13 +5,10 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { createTaskSchema } from '../schemas';
 import { Models } from 'node-appwrite';
+import { Task } from '../types';
 
 type CreateTaskRequest = z.infer<typeof createTaskSchema>;
-type CreateTaskResponse = Models.Document & {
-  name: string;
-  imageUrl: string | undefined;
-  workspaceId: string;
-};
+type CreateTaskResponse = Task
 
 const postCreateTask = async (
   data: CreateTaskRequest
@@ -28,9 +25,10 @@ export const useCreateTask = () => {
     mutationFn: async (data) => {
       return await postCreateTask(data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Task created');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({queryKey:['project-analytics',data.projectId]})
     },
     onError: () => {
       toast.error('Failed to create task');

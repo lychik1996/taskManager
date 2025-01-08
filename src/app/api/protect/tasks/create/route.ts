@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { DATABASE_ID, TASKS_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
+import { Task } from '@/features/tasks/types';
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
         ? highestPositionTask.documents[0].position + 1000
         : 1000;
 
-    const task = await databases.createDocument(
+    const task = await databases.createDocument<Task>(
       DATABASE_ID,
       TASKS_ID,
       ID.unique(),

@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
+
 
 import { toast } from 'sonner';
-import { createTaskSchema } from '../schemas';
-import { Models } from 'node-appwrite';
-import { useRouter } from 'next/navigation';
+
 import { Task, TaskStatus } from '../types';
+import { useProjectId } from '@/features/projects/hooks/use-project-id';
 
 type useBulkUpdateTasksRequest = {$id:string;position:number; status:TaskStatus}[];
 type useBulkUpdateTasksResponse = Task[]
@@ -21,7 +20,7 @@ const bulkUpdateTasks = async (
 };
 
 export const useBulkUpdateTasks = () => {
-  
+  const projectId = useProjectId();
   const queryClient = useQueryClient();
   return useMutation<useBulkUpdateTasksResponse, Error, useBulkUpdateTasksRequest>({
     mutationFn: async (data) => {
@@ -30,6 +29,7 @@ export const useBulkUpdateTasks = () => {
     onSuccess: () => {
       toast.success('Tasks updated');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({queryKey:['project-analytics',projectId]});
     },
     onError: () => {
       toast.error('Failed to update tasks');
