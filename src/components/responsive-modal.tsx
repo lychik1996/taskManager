@@ -18,7 +18,7 @@ export default function ResponsiveModal({
   const isDesktop = useMedia('(min-width:1024px)', true);
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={onOpenChange} >
         <DialogContent
           aria-describedby={undefined}
           className="w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]"
@@ -30,7 +30,7 @@ export default function ResponsiveModal({
     );
   }
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} >
       <DrawerContent aria-describedby={undefined}>
         <DialogTitle className="sr-only">Dialog Title</DialogTitle>
         <div className="overflow-y-auto hide-scrollbar max-h-[85vh]">

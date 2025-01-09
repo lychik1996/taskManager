@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Calendar } from './ui/calendar';
+import { useState } from 'react';
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -20,9 +21,11 @@ export default function DatePicker({
   className,
   placeholder = 'Select date',
 }: DatePickerProps) {
+  const [isOpen, setIsopen] = useState(false);
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    
+    <div className='relative'>
+      
         <Button
           variant="outline"
           size="lg"
@@ -31,19 +34,25 @@ export default function DatePicker({
             !value && 'text-muted-foreground',
             className
           )}
+          onClick={(e)=>{
+            e.preventDefault();
+            setIsopen(prev=>!prev)
+          }}
         >
           <CalendarIcon className="mr-2 h-4 -4" />
           {value ? format(value, 'PPP') : <span>{placeholder}</span>}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      
+      {isOpen && (
+        <div className="w-auto p-0">
         <Calendar
           mode="single"
           selected={value}
           onSelect={(date) => onChange(date as Date)}
           initialFocus
         />
-      </PopoverContent>
-    </Popover>
+      </div>
+      )}
+    </div>
   );
 }
