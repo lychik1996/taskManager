@@ -26,6 +26,7 @@ export default function DatePicker({
         <Button
           variant="outline"
           size="lg"
+          onTouchStart={(e) => e.preventDefault()}
           className={cn(
             'w-full justify-start text-left font-normal px-3',
             !value && 'text-muted-foreground',
@@ -36,7 +37,7 @@ export default function DatePicker({
           {value ? format(value, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0 z-50">
         <Calendar
           mode="single"
           selected={value}
