@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 import { useCreateTask } from '../api/use-create-task';
 import { createTaskSchema } from '../schemas';
-import DatePicker from '@/components/date-picker';
+import DatePickerV2 from '@/components/date-pickerv2';
 import {
   Select,
   SelectContent,
@@ -108,11 +108,7 @@ export default function CreateTaskForm({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker
-                        value={field.value ? new Date(field.value) : undefined}
-                        onChange={(date: Date) => field.onChange(date)}
-                        className="h-12"
-                      />
+                      <DatePickerV2 {...field}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -237,14 +233,6 @@ export default function CreateTaskForm({
             </div>
           </form>
         </Form>
-        <div>
-        <DatePicker
-                        value={undefined}
-                        onChange={()=>{}}
-                        className="h-12"
-                      />
-        </div>
-        
       </CardContent>
     </Card>
   );

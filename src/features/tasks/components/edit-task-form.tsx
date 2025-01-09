@@ -31,6 +31,7 @@ import MemberAvatar from '@/features/members/components/member-avatar';
 import { Task, TaskStatus } from '../types';
 import ProjectAvatar from '@/features/projects/components/project-avatar';
 import { useUpdateTask } from '../api/use-update-task';
+import DatePickerV2 from '@/components/date-pickerv2';
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -108,10 +109,8 @@ export default function EditTaskForm({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker
-                         value={field.value ? new Date(field.value) : undefined}
-                         onChange={(date: Date) => field.onChange(date)}
-                         className="h-12"
+                      <DatePickerV2
+                         {...field}
                       />
                     </FormControl>
                     <FormMessage />
