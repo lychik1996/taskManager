@@ -109,9 +109,9 @@ export default function CreateTaskForm({
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
                       <DatePicker
-                        {...field}
                         value={field.value ? new Date(field.value) : undefined}
-                        onChange={field.onChange}
+                        onChange={(date: Date) => field.onChange(date)}
+                        className="h-12"
                       />
                     </FormControl>
                     <FormMessage />

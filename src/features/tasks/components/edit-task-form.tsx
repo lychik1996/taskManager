@@ -109,9 +109,9 @@ export default function EditTaskForm({
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
                       <DatePicker
-                        {...field}
-                        value={field.value ? new Date(field.value) : undefined}
-                        onChange={field.onChange}
+                         value={field.value ? new Date(field.value) : undefined}
+                         onChange={(date: Date) => field.onChange(date)}
+                         className="h-12"
                       />
                     </FormControl>
                     <FormMessage />
