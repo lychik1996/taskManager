@@ -108,7 +108,7 @@ export default function EditTaskForm({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} />
+                      <DatePicker {...field} className="h-8 w-full lg:w-auto" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
