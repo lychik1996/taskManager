@@ -108,7 +108,11 @@ export default function EditTaskForm({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} className="h-8 w-full lg:w-auto" />
+                      <DatePicker
+                        {...field}
+                        value={field.value ? new Date(field.value) : undefined}
+                        onChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
