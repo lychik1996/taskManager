@@ -53,7 +53,7 @@ export async function GET(
 
     const assignee = {
       ...member,
-      name: user.name,
+      name: user.name || user.email,
       email: user.email,
     };
     return NextResponse.json({

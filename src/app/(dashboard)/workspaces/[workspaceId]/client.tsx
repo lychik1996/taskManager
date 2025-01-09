@@ -6,6 +6,7 @@ import PageError from '@/components/page-error';
 import PageLoader from '@/components/page-loader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useGetMembers } from '@/features/members/api/use-get-members';
 import MemberAvatar from '@/features/members/components/member-avatar';
 import { Member } from '@/features/members/types';
@@ -178,22 +179,25 @@ const MembersList = ({ data, total }: MembersListProps) => {
           </Button>
         </div>
         <DottedSeparator className="my-4" />
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4">
           {data.map((member) => (
             <li key={member.$id}>
-              <Card className="shadow-none rounded-lg overflow-hidden">
-                <CardContent className="p-3 flex items-center gap-x-2">
-                  <MemberAvatar name={member.name} className="size-12" />
-                  <div className="flex flex-col items-center overflow-hidden">
+              <ScrollArea className='border rounded-lg whitespace-nowrap shrink-0'>
+              <Card className="shadow-none border-none overflow-auto">
+                <CardContent className="p-3 flex items-center lg:justify-center  flex-wrap gap-x-2">
+                  <MemberAvatar name={member.name} className="size-10" />
+                  <div className="flex flex-col items-center">
                     <p className="text-lg font-medium line-clamp-1">
                       {member.name}
                     </p>
-                    <p className="text-sm text-muted-foreground line-clamp-1">
+                    <p className="text-xs text-muted-foreground line-clamp-1">
                       {member.email}
                     </p>
                   </div>
                 </CardContent>
               </Card>
+              <ScrollBar orientation="horizontal" className='cursor-pointer'/>
+              </ScrollArea>
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">

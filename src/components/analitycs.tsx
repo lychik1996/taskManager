@@ -72,7 +72,7 @@ export default function Analitycs({ data }: AnalitycsProps) {
           </div>
         )}
       </div>
-      <ScrollBar orientation="horizontal" />
+      <ScrollBar orientation="horizontal" className='cursor-pointer' />
     </ScrollArea>
   );
 }

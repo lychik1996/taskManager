@@ -43,6 +43,6 @@
 }
 
 .rbc-off-range-bg {
-  background: inherit;
+  /* background: inherit; */
   /* style block without current month */
 }

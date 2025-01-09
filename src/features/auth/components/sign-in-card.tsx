@@ -19,6 +19,7 @@ import {
 import { loginSchema } from '../schemas';
 import { useLogin } from '../api/use-login';
 import Link from 'next/link';
+import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
 
 export default function SignInCard() {
   const { mutate, isPending } = useLogin();
@@ -96,6 +97,7 @@ export default function SignInCard() {
           size={'lg'}
           className="w-full"
           disabled={isPending}
+          onClick={()=>signUpWithGoogle()}
         >
           <FcGoogle className="mr-2 size-5" />
           Login with Google
@@ -105,6 +107,7 @@ export default function SignInCard() {
           size={'lg'}
           className="w-full"
           disabled={isPending}
+          onClick={()=>signUpWithGithub()}
         >
           <FaGithub className="mr-2 size-5" />
           Login with Githhub

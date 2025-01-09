@@ -50,7 +50,7 @@ export async function GET(
         const user = await users.get(member.userId);
         return {
           ...member,
-          name: user.name,
+          name: user.name || user.email,
           email: user.email,
         };
       })
