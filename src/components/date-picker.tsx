@@ -31,13 +31,12 @@ export default function DatePicker({
             !value && 'text-muted-foreground',
             className
           )}
-          onClick={(e)=>e.stopPropagation()}
         >
           <CalendarIcon className="mr-2 h-4 -4" />
           {value ? format(value, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0 z-[100]">
         <Calendar
           mode="single"
           selected={value}
