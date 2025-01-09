@@ -30,13 +30,15 @@ export const useUpdateTask = () => {
     mutationFn: async (data) => {
       return await updateTask(data);
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       toast.success('Task updated');
-      console.log('Invalidating project-analytics for:', variables.param);
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['task', data.$id] });
       queryClient.invalidateQueries({
-        queryKey: ['project-analytics', data.projectId],
+        queryKey: ['project-analytics'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['workspace-analytics'],
       });
     },
     onError: () => {

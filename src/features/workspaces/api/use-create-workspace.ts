@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { createWorkspaceShcema } from '../schemas';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 type CreateWorkSpaceRequest = z.infer<typeof createWorkspaceShcema>;
 type CreateWorkSpaceResponse = { data: { $id: string } };
@@ -22,6 +23,7 @@ const postCreateWorkSpace = async (
 };
 
 export const useCreateWorkSpace = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation<CreateWorkSpaceResponse, Error, CreateWorkSpaceRequest>({
     mutationFn: async (data: CreateWorkSpaceRequest) => {
@@ -29,6 +31,7 @@ export const useCreateWorkSpace = () => {
     },
     onSuccess: () => {
       toast.success('Workspace created');
+      router.refresh();
       queryClient.invalidateQueries({ queryKey: ['workspaces'] });
     },
     onError: () => {

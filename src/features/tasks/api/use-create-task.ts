@@ -28,10 +28,10 @@ export const useCreateTask = () => {
       toast.success('Task created');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({
-        queryKey: ['project-analytics', data.projectId],
+        queryKey: ['project-analytics'],
       });
       queryClient.invalidateQueries({
-        queryKey: ['workspace-analytics', data.workspaceId],
+        queryKey: ['workspace-analytics'],
       });
     },
     onError: () => {
