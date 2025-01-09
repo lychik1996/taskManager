@@ -237,6 +237,14 @@ export default function CreateTaskForm({
             </div>
           </form>
         </Form>
+        <div>
+        <DatePicker
+                        value={undefined}
+                        onChange={()=>{}}
+                        className="h-12"
+                      />
+        </div>
+        
       </CardContent>
     </Card>
   );
