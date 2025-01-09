@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Calendar } from './ui/calendar';
-import { Portal } from '@radix-ui/react-portal';
+import {Portal } from '@radix-ui/react-popover';
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -23,7 +23,7 @@ export default function DatePicker({
 }: DatePickerProps) {
   return (
     <Popover>
-      <PopoverTrigger asChild >
+      <PopoverTrigger asChild>
         <Button
           variant="outline"
           size="lg"
@@ -38,14 +38,14 @@ export default function DatePicker({
         </Button>
       </PopoverTrigger>
       <Portal>
-      <PopoverContent className="w-auto p-0 z-[1000]">
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={(date) => onChange(date as Date)}
-          initialFocus
-        />
-      </PopoverContent>
+        <PopoverContent className="w-auto p-0 z-[1000]">
+          <Calendar
+            mode="single"
+            selected={value}
+            onSelect={(date) => onChange(date as Date)}
+            initialFocus
+          />
+        </PopoverContent>
       </Portal>
     </Popover>
   );
