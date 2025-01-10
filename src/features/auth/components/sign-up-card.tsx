@@ -136,7 +136,7 @@ export default function SignUpCard() {
         >
           <FcGoogle className={cn(
                       "mr-2 size-5" ,
-                      isPending && "text-muted-foreground opacity-40"
+                      isPending && "text-muted-foreground opacity-30"
                     )}/>
           Login with Google
         </Button>

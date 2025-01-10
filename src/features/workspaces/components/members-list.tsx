@@ -22,6 +22,7 @@ import { MemberRole } from '@/features/members/types';
 import { useConfirm } from '@/hooks/use-confirm';
 import { Models } from 'node-appwrite';
 import { cn } from '@/lib/utils';
+import PageLoader from '@/components/page-loader';
 
 interface MemberListProps {
   user?: Models.User<Models.Preferences>;
@@ -85,81 +86,39 @@ export default function MembersList({ user }: MemberListProps) {
         <DottedSeparator />
       </div>
       <CardContent className="p-7">
-        {data?.documents.map((member, index) => {
-          const isCurrentUser = member.userId === user?.$id;
-          const isAdminWorkspace = member.role === MemberRole.ADMIN;
-          const isMemberWorkspace = member.role === MemberRole.MEMBER;
-          return (
-            <Fragment key={member.$id}>
-              <div className="flex items-center gap-2">
-                <MemberAvatar
-                  name={member.name}
-                  className="size-14"
-                  fallbackClassName="text-lg"
-                />
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium">{member.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {member.email}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{member.role}</p>
-                </div>
-                {isAdmin? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        className={cn(
-                          "ml-auto focus-visible:ring-0 ",
-                          isAdmin && isCurrentUser && adminsCounts<2 && "hidden"
-                        )}
-                        variant="secondary"
-                        size="icon"
-                        autoFocus={false}
-                        
-                      >
-                        <MoreVerticalIcon className="size-4 text-muted-foreground" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="bottom" align="end">
-                      {isMemberWorkspace && (
-                        <DropdownMenuItem
-                          className="font-medium cursor-pointer"
-                          onClick={() =>
-                            handleUpdateMember(member.$id, MemberRole.ADMIN)
-                          }
-                          disabled={isUpdatingMember}
-                        >
-                          Set as administrator
-                        </DropdownMenuItem>
-                      )}
-                      {isAdminWorkspace && adminsCounts > 1 && (
-                        <DropdownMenuItem
-                          className="font-medium cursor-pointer"
-                          onClick={() =>
-                            handleUpdateMember(member.$id, MemberRole.MEMBER)
-                          }
-                          disabled={isUpdatingMember}
-                        >
-                          Set as Member
-                        </DropdownMenuItem>
-                      )}
-                      {(adminsCounts > 1 || isMemberWorkspace) && (
-                        <DropdownMenuItem
-                          className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
-                          onClick={() => handleDeleteMember(member.$id)}
-                          disabled={isDeletingMember}
-                        >
-                          Remove {member.name}
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  isCurrentUser && (
+        {data ? (
+          data.documents.map((member, index) => {
+            const isCurrentUser = member.userId === user?.$id;
+            const isAdminWorkspace = member.role === MemberRole.ADMIN;
+            const isMemberWorkspace = member.role === MemberRole.MEMBER;
+            return (
+              <Fragment key={member.$id}>
+                <div className="flex items-center gap-2">
+                  <MemberAvatar
+                    name={member.name}
+                    className="size-14"
+                    fallbackClassName="text-lg"
+                  />
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium">{member.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {member.email}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {member.role}
+                    </p>
+                  </div>
+                  {isAdmin ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
-                          className="ml-auto focus-visible:ring-0 "
+                          className={cn(
+                            'ml-auto focus-visible:ring-0 ',
+                            isAdmin &&
+                              isCurrentUser &&
+                              adminsCounts < 2 &&
+                              'hidden'
+                          )}
                           variant="secondary"
                           size="icon"
                           autoFocus={false}
@@ -168,24 +127,74 @@ export default function MembersList({ user }: MemberListProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent side="bottom" align="end">
-                        <DropdownMenuItem
-                          className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
-                          onClick={() => handleDeleteMember(member.$id)}
-                          disabled={isDeletingMember}
-                        >
-                          Remove {member.name}
-                        </DropdownMenuItem>
+                        {isMemberWorkspace && (
+                          <DropdownMenuItem
+                            className="font-medium cursor-pointer"
+                            onClick={() =>
+                              handleUpdateMember(member.$id, MemberRole.ADMIN)
+                            }
+                            disabled={isUpdatingMember}
+                          >
+                            Set as administrator
+                          </DropdownMenuItem>
+                        )}
+                        {isAdminWorkspace && adminsCounts > 1 && (
+                          <DropdownMenuItem
+                            className="font-medium cursor-pointer"
+                            onClick={() =>
+                              handleUpdateMember(member.$id, MemberRole.MEMBER)
+                            }
+                            disabled={isUpdatingMember}
+                          >
+                            Set as Member
+                          </DropdownMenuItem>
+                        )}
+                        {(adminsCounts > 1 || isMemberWorkspace) && (
+                          <DropdownMenuItem
+                            className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
+                            onClick={() => handleDeleteMember(member.$id)}
+                            disabled={isDeletingMember}
+                          >
+                            Remove {!isCurrentUser ? member.name : 'yourself'}
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  )
+                  ) : (
+                    isCurrentUser && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            className="ml-auto focus-visible:ring-0 "
+                            variant="secondary"
+                            size="icon"
+                            autoFocus={false}
+                          >
+                            <MoreVerticalIcon className="size-4 text-muted-foreground" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="bottom" align="end">
+                          <DropdownMenuItem
+                            className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
+                            onClick={() => handleDeleteMember(member.$id)}
+                            disabled={isDeletingMember}
+                          >
+                            Remove {!isCurrentUser ? member.name : 'yourself'}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )
+                  )}
+                </div>
+                {index < data.documents.length - 1 && (
+                  <Separator className="my-2.5" />
                 )}
-              </div>
-              {index < data.documents.length - 1 && (
-                <Separator className="my-2.5" />
-              )}
-            </Fragment>
-          );
-        })}
+              </Fragment>
+            );
+          })
+        ) : (
+          <PageLoader  className='h-14'/>
+        )}
       </CardContent>
     </Card>
   );
