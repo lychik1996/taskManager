@@ -12,7 +12,7 @@ export async function PATCH(
   try {
     const formData = await req.formData();
     const name = formData.get('name') as string;
-    const image = formData.get('image') as File;
+    const image = formData.get('image');
     const { workspaceId } = await params;
 
     if (!workspaceId) {
@@ -21,13 +21,13 @@ export async function PATCH(
         { status: 401 }
       );
     }
+
     const context = await CheckSession();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    const databases = context.databases;
-    const storage = context.storage;
-    const user = context.user;
+
+    const { databases, storage, user } = context;
 
     const member = await getMember({
       databases,
@@ -40,6 +40,7 @@ export async function PATCH(
     }
 
     let uploadedImageUrl: string | undefined;
+
     if (image instanceof File) {
       const file = await storage.createFile(
         IMAGES_BUCKET_ID,
@@ -53,15 +54,14 @@ export async function PATCH(
       uploadedImageUrl = `data:image/png;base64,${Buffer.from(
         arrayBuffer
       ).toString('base64')}`;
-    }
-
-    const currentWorkspace = await databases.getDocument(
-      DATABASE_ID,
-      WORKSPACES_ID,
-      workspaceId
-    );
-
-    if (!uploadedImageUrl) {
+    } else if (image === null) {
+      uploadedImageUrl = '';
+    } else {
+      const currentWorkspace = await databases.getDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId
+      );
       uploadedImageUrl = currentWorkspace.imageUrl;
     }
 
@@ -74,11 +74,13 @@ export async function PATCH(
         imageUrl: uploadedImageUrl,
       }
     );
+
     return NextResponse.json(workspace);
-  } catch {
+  } catch (error) {
+    console.error('Error updating workspace:', error);
     return NextResponse.json(
       { message: 'Something went wrong' },
-      { status: 401 }
+      { status: 500 }
     );
   }
 }

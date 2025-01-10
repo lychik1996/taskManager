@@ -1,8 +1,4 @@
-import {
-  DATABASE_ID,
-  IMAGES_BUCKET_ID,
-  PROJECTS_ID,
-} from '@/config';
+import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECTS_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { Project } from '@/features/projects/types';
 import { CheckSession } from '@/lib/checkSession';
@@ -15,11 +11,9 @@ export async function PATCH(
 ) {
   try {
     const { projectId } = await params;
-    console.log(projectId);
     const formData = await req.formData();
     const name = formData.get('name') as string;
     const image = formData.get('image') as File;
-    console.log(name);
     if (!projectId) {
       return NextResponse.json(
         { message: 'ProjectId is missing' },
@@ -64,16 +58,10 @@ export async function PATCH(
       uploadedImageUrl = `data:image/png;base64,${Buffer.from(
         arrayBuffer
       ).toString('base64')}`;
-    }
-
-    const currentProject = await databases.getDocument(
-      DATABASE_ID,
-      PROJECTS_ID,
-      projectId
-    );
-
-    if (!uploadedImageUrl) {
-      uploadedImageUrl = currentProject.imageUrl;
+    } else if (image === null) {
+      uploadedImageUrl = '';
+    } else {
+      uploadedImageUrl = existingProject.imageUrl;
     }
 
     const project = await databases.updateDocument(
