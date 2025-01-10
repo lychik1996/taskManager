@@ -179,14 +179,13 @@ const MembersList = ({ data, total }: MembersListProps) => {
           </Button>
         </div>
         <DottedSeparator className="my-4" />
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4">
+        <ul className="flex flex-col md:flex-row flex-wrap gap-4">
           {data.map((member) => (
-            <li key={member.$id}>
-              <ScrollArea className='border rounded-lg whitespace-nowrap shrink-0'>
-              <Card className="shadow-none border-none overflow-auto">
+            <li key={member.$id} className='min-w-fit'>
+              <Card className="shadow-none border rounded-md overflow-auto">
                 <CardContent className="p-3 flex items-center lg:justify-center  flex-wrap gap-x-2">
                   <MemberAvatar name={member.name} className="size-10" />
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center min-w-48">
                     <p className="text-lg font-medium line-clamp-1">
                       {member.name}
                     </p>
@@ -196,8 +195,7 @@ const MembersList = ({ data, total }: MembersListProps) => {
                   </div>
                 </CardContent>
               </Card>
-              <ScrollBar orientation="horizontal" className='cursor-pointer'/>
-              </ScrollArea>
+              
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
