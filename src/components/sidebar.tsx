@@ -8,7 +8,7 @@ import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 export default function Sidebar() {
   return (
-    <ScrollArea className='h-full'>
+    <ScrollArea className='h-full bg-neutral-100'>
       <aside className="min-h-screen bg-neutral-100 p-4 w-full">
       <Link href="/">
         <Image src="/logo.svg" alt="logo" width={100} height={60}/>
