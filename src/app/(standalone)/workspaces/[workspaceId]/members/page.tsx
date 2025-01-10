@@ -8,7 +8,7 @@ export default async function WorkspaceIdMemberspage() {
 
   return (
     <div className="w-full lg:max-w-xl">
-      <MembersList />
+      <MembersList user={user}/>
     </div>
   );
 }

@@ -20,8 +20,12 @@ import { useDeleteMember } from '@/features/members/api/use-delete-member';
 import { useUpdateMember } from '@/features/members/api/use-update-member';
 import { MemberRole } from '@/features/members/types';
 import { useConfirm } from '@/hooks/use-confirm';
+import { Models } from 'node-appwrite';
 
-export default function MembersList() {
+interface MemberListProps {
+  user?: Models.User<Models.Preferences>;
+}
+export default function MembersList({ user }: MemberListProps) {
   const workspaceId = useWorkspaceId();
 
   const [ConfirmDialog, confirm] = useConfirm(
@@ -30,6 +34,10 @@ export default function MembersList() {
     'destructive'
   );
   const { data } = useGetMembers({ workspaceId });
+  const isAdmin = data?.documents.some((member) => {
+    return member.userId === user?.$id && member.role === MemberRole.ADMIN;
+  });
+
   const { mutate: deleteMember, isPending: isDeletingMember } =
     useDeleteMember();
   const { mutate: updateMember, isPending: isUpdatingMember } =
@@ -70,58 +78,96 @@ export default function MembersList() {
         <DottedSeparator />
       </div>
       <CardContent className="p-7">
-        {data?.documents.map((member, index) => (
-          <Fragment key={member.$id}>
-            <div className="flex items-center gap-2">
-              <MemberAvatar
-                name={member.name}
-                className="size-10"
-                fallbackClassName="text-lg"
-              />
-              <div className="flex flex-col">
-                <p className="text-sm font-medium">{member.name}</p>
-                <p className="text-xs text-muted-foreground">{member.email}</p>
+        {data?.documents.map((member, index) => {
+          const isCurrentUser = member.userId === user?.$id;
+          return (
+            <Fragment key={member.$id}>
+              <div className="flex items-center gap-2">
+                <MemberAvatar
+                  name={member.name}
+                  className="size-14"
+                  fallbackClassName="text-lg"
+                />
+                <div className="flex flex-col">
+                  <p className="text-sm font-medium">{member.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {member.email}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{member.role}</p>
+                </div>
+                {isAdmin ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        className="ml-auto focus-visible:ring-0 "
+                        variant="secondary"
+                        size="icon"
+                        autoFocus={false}
+                      >
+                        <MoreVerticalIcon className="size-4 text-muted-foreground" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="bottom" align="end">
+                      <DropdownMenuItem
+                        className="font-medium cursor-pointer"
+                        onClick={() =>
+                          handleUpdateMember(member.$id, MemberRole.ADMIN)
+                        }
+                        disabled={isUpdatingMember}
+                      >
+                        Set as administrator
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="font-medium cursor-pointer"
+                        onClick={() =>
+                          handleUpdateMember(member.$id, MemberRole.MEMBER)
+                        }
+                        disabled={isUpdatingMember}
+                      >
+                        Set as Member
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        className="font-medium cursor-pointer"
+                        onClick={() => handleDeleteMember(member.$id)}
+                        disabled={isDeletingMember}
+                      >
+                        Remove {member.name}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  isCurrentUser && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          className="ml-auto focus-visible:ring-0 "
+                          variant="secondary"
+                          size="icon"
+                          autoFocus={false}
+                        >
+                          <MoreVerticalIcon className="size-4 text-muted-foreground" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent side="bottom" align="end">
+                        <DropdownMenuItem
+                          className="font-medium cursor-pointer"
+                          onClick={() => handleDeleteMember(member.$id)}
+                          disabled={isDeletingMember}
+                        >
+                          Remove {member.name}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )
+                )}
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="ml-auto" variant="secondary" size="icon">
-                    <MoreVerticalIcon className="size-4 text-muted-foreground" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end">
-                  <DropdownMenuItem
-                    className="font-medium"
-                    onClick={() =>
-                      handleUpdateMember(member.$id, MemberRole.ADMIN)
-                    }
-                    disabled={isUpdatingMember}
-                  >
-                    Set as administrator
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="font-medium"
-                    onClick={() =>
-                      handleUpdateMember(member.$id, MemberRole.MEMBER)
-                    }
-                    disabled={isUpdatingMember}
-                  >
-                    Set as Member
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="font-medium text-amber-700"
-                    onClick={() => handleDeleteMember(member.$id)}
-                    disabled={isDeletingMember}
-                  >
-                    Remove {member.name}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            {index < data.documents.length - 1 && (
-              <Separator className="my-2.5" />
-            )}
-          </Fragment>
-        ))}
+              {index < data.documents.length - 1 && (
+                <Separator className="my-2.5" />
+              )}
+            </Fragment>
+          );
+        })}
       </CardContent>
     </Card>
   );
