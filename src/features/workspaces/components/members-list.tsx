@@ -128,7 +128,7 @@ export default function MembersList({ user }: MemberListProps) {
                       </DropdownMenuItem>
 
                       <DropdownMenuItem
-                        className="font-medium cursor-pointer"
+                        className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
                         onClick={() => handleDeleteMember(member.$id)}
                         disabled={isDeletingMember}
                       >
@@ -151,7 +151,7 @@ export default function MembersList({ user }: MemberListProps) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent side="bottom" align="end">
                         <DropdownMenuItem
-                          className="font-medium cursor-pointer"
+                          className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
                           onClick={() => handleDeleteMember(member.$id)}
                           disabled={isDeletingMember}
                         >

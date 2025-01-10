@@ -181,9 +181,9 @@ const MembersList = ({ data, total }: MembersListProps) => {
         <DottedSeparator className="my-4" />
         <ul className="flex flex-col md:flex-row flex-wrap gap-4">
           {data.map((member) => (
-            <li key={member.$id} className="min-w-fit">
+            <li key={member.$id} className="flex-1">
               <Card className="shadow-none border rounded-md overflow-auto">
-                <CardContent className="p-3 flex items-center lg:justify-center  flex-wrap gap-x-2">
+                <CardContent className="p-3 flex items-center md:justify-center flex-wrap gap-x-2">
                   <MemberAvatar name={member.name} className="size-10" />
                   <div className="flex flex-col items-center min-w-48">
                     <p className="text-lg font-medium line-clamp-1">
