@@ -20,6 +20,7 @@ import { loginSchema } from '../schemas';
 import { useLogin } from '../api/use-login';
 import Link from 'next/link';
 import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
+import { cn } from '@/lib/utils';
 
 export default function SignInCard() {
   const { mutate, isPending } = useLogin();
@@ -99,7 +100,10 @@ export default function SignInCard() {
           disabled={isPending}
           onClick={()=>signUpWithGoogle()}
         >
-          <FcGoogle className="mr-2 size-5" />
+          <FcGoogle className={cn(
+            "mr-2 size-5" ,
+            isPending && "text-muted-foreground opacity-40"
+          )}/>
           Login with Google
         </Button>
         <Button

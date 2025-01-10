@@ -21,6 +21,7 @@ import { useUpdateMember } from '@/features/members/api/use-update-member';
 import { MemberRole } from '@/features/members/types';
 import { useConfirm } from '@/hooks/use-confirm';
 import { Models } from 'node-appwrite';
+import { cn } from '@/lib/utils';
 
 interface MemberListProps {
   user?: Models.User<Models.Preferences>;
@@ -107,10 +108,14 @@ export default function MembersList({ user }: MemberListProps) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
-                        className="ml-auto focus-visible:ring-0 "
+                        className={cn(
+                          "ml-auto focus-visible:ring-0 ",
+                          isAdmin && isCurrentUser && adminsCounts<2 && "hidden"
+                        )}
                         variant="secondary"
                         size="icon"
                         autoFocus={false}
+                        
                       >
                         <MoreVerticalIcon className="size-4 text-muted-foreground" />
                       </Button>

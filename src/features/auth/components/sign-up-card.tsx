@@ -25,6 +25,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '../schemas';
 import { useRegister } from '../api/use-register';
 import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
+import { cn } from '@/lib/utils';
 
 export default function SignUpCard() {
   const { mutate, isPending } = useRegister();
@@ -133,7 +134,10 @@ export default function SignUpCard() {
           disabled={isPending}
           onClick={()=>signUpWithGoogle()}
         >
-          <FcGoogle className="mr-2 size-5" />
+          <FcGoogle className={cn(
+                      "mr-2 size-5" ,
+                      isPending && "text-muted-foreground opacity-40"
+                    )}/>
           Login with Google
         </Button>
         <Button
