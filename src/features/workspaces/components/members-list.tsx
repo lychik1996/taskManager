@@ -34,10 +34,16 @@ export default function MembersList({ user }: MemberListProps) {
     'destructive'
   );
   const { data } = useGetMembers({ workspaceId });
+
   const isAdmin = data?.documents.some((member) => {
     return member.userId === user?.$id && member.role === MemberRole.ADMIN;
   });
-
+  const adminsCounts = data
+    ? data.documents.reduce(
+        (acum, member) => (member.role === MemberRole.ADMIN ? acum + 1 : acum),
+        0
+      )
+    : 0;
   const { mutate: deleteMember, isPending: isDeletingMember } =
     useDeleteMember();
   const { mutate: updateMember, isPending: isUpdatingMember } =
@@ -80,6 +86,8 @@ export default function MembersList({ user }: MemberListProps) {
       <CardContent className="p-7">
         {data?.documents.map((member, index) => {
           const isCurrentUser = member.userId === user?.$id;
+          const isAdminWorkspace = member.role === MemberRole.ADMIN;
+          const isMemberWorkspace = member.role === MemberRole.MEMBER;
           return (
             <Fragment key={member.$id}>
               <div className="flex items-center gap-2">
@@ -95,7 +103,7 @@ export default function MembersList({ user }: MemberListProps) {
                   </p>
                   <p className="text-xs text-muted-foreground">{member.role}</p>
                 </div>
-                {isAdmin ? (
+                {isAdmin? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -108,32 +116,37 @@ export default function MembersList({ user }: MemberListProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent side="bottom" align="end">
-                      <DropdownMenuItem
-                        className="font-medium cursor-pointer"
-                        onClick={() =>
-                          handleUpdateMember(member.$id, MemberRole.ADMIN)
-                        }
-                        disabled={isUpdatingMember}
-                      >
-                        Set as administrator
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="font-medium cursor-pointer"
-                        onClick={() =>
-                          handleUpdateMember(member.$id, MemberRole.MEMBER)
-                        }
-                        disabled={isUpdatingMember}
-                      >
-                        Set as Member
-                      </DropdownMenuItem>
-
-                      <DropdownMenuItem
-                        className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
-                        onClick={() => handleDeleteMember(member.$id)}
-                        disabled={isDeletingMember}
-                      >
-                        Remove {member.name}
-                      </DropdownMenuItem>
+                      {isMemberWorkspace && (
+                        <DropdownMenuItem
+                          className="font-medium cursor-pointer"
+                          onClick={() =>
+                            handleUpdateMember(member.$id, MemberRole.ADMIN)
+                          }
+                          disabled={isUpdatingMember}
+                        >
+                          Set as administrator
+                        </DropdownMenuItem>
+                      )}
+                      {isAdminWorkspace && adminsCounts > 1 && (
+                        <DropdownMenuItem
+                          className="font-medium cursor-pointer"
+                          onClick={() =>
+                            handleUpdateMember(member.$id, MemberRole.MEMBER)
+                          }
+                          disabled={isUpdatingMember}
+                        >
+                          Set as Member
+                        </DropdownMenuItem>
+                      )}
+                      {(adminsCounts > 1 || isMemberWorkspace) && (
+                        <DropdownMenuItem
+                          className="font-medium cursor-pointer text-amber-700 focus:text-amber-700"
+                          onClick={() => handleDeleteMember(member.$id)}
+                          disabled={isDeletingMember}
+                        >
+                          Remove {member.name}
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
