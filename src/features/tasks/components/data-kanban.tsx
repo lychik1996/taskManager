@@ -74,6 +74,13 @@ export default function DataKanban({ data, onChange }: DataKanbanProps) {
       const sourceStatus = source.droppableId as TaskStatus;
       const destStatus = destination.droppableId as TaskStatus;
 
+      if (
+        sourceStatus === destStatus &&
+        source.index === destination.index
+      ) {
+        return;
+      }
+      
       let updatesPayload: {
         $id: string;
         status: TaskStatus;

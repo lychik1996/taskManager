@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
-
+  
   return (
     <div>
       <div className="rounded-md border">
@@ -79,6 +79,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  href={`/workspaces/${(row.original as any).workspaceId}/tasks/${(row.original as any).$id}`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

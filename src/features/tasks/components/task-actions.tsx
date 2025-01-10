@@ -44,7 +44,7 @@ export default function TaskActions({
     router.push(`/workspaces/${workspaceId}/projects/${projectId}`);
   };
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end" onClick={(e)=>e.stopPropagation()}>
       <ConfirmDialog />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>

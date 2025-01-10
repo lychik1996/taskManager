@@ -58,10 +58,9 @@ export default function DatePickerV2({
       </Button>
 
       {isOpen && (
-        
           <div className="w-auto p-0 z-[1000] absolute bg-white border-gray-300 border-1px rounded-lg shadow-md" 
           style={{
-            top: calendarRef.current? `${calendarRef.current.offsetHeight}px` : '0',
+            top: calendarRef.current? `${calendarRef.current.offsetHeight}px` : '0px',
             position: 'absolute',
           }}
           >
@@ -72,7 +71,6 @@ export default function DatePickerV2({
               initialFocus
             />
           </div>
-        
       )}
     </div>
   );
