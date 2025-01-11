@@ -17,6 +17,7 @@ import { TaskStatus } from '../types';
 import { useBulkUpdateTasks } from '../api/use-bulk-update-tasks';
 import DataCalendar from './data-calendar';
 import { useProjectId } from '@/features/projects/hooks/use-project-id';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface TaskViewSwitcherProps {
   hideProjectFilter?: boolean;
@@ -89,11 +90,15 @@ export default function TaskViewSwitcher({
               <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="kanban" className="mt-0">
-              <DataKanban
-                onChange={onKanbanChange}
-                data={tasks?.documents ?? []}
-              />
+              <ScrollArea>
+                <DataKanban
+                  onChange={onKanbanChange}
+                  data={tasks?.documents ?? []}
+                />
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             </TabsContent>
+
             <TabsContent value="calendar" className="mt-0 h-full pb-4">
               <DataCalendar data={tasks?.documents ?? []} />
             </TabsContent>
