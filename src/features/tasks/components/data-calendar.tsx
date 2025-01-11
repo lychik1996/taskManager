@@ -42,7 +42,7 @@ interface CustomToolbarProps {
 }
 const CustomToolbar = ({ date, onNavigate }: CustomToolbarProps) => {
   return (
-    <div className="flex mb-4 gap-x-2 items-center w-full lg:w-auto justify-center lg:justify-start">
+    <div className="flex mb-4 gap-x-2 items-center w-full lg:w-auto justify-center lg:justify-start absolute top-0 left-0">
       <Button
         onClick={() => onNavigate('PREV')}
         variant="secondary"
@@ -68,7 +68,7 @@ export default function DataCalendar({ data }: DataCalendarProps) {
   const [value, setValue] = useState(
     data.length > 0 ? new Date(data[0].dueDate) : new Date()
   );
-  const calendarRef = useRef<HTMLDivElement | null>(null);
+
   const events = data.map((task) => ({
     start: new Date(task.dueDate),
     end: new Date(task.dueDate),
@@ -88,50 +88,40 @@ export default function DataCalendar({ data }: DataCalendarProps) {
       setValue(new Date());
     }
   };
-  useEffect(() => {
-    const calendarDiv = calendarRef.current?.querySelector('.rbc-month-view');
-    if (
-      calendarDiv &&
-      !calendarDiv.parentElement?.classList.contains('overflow-wrapper')
-    ) {
-      const wrapperDiv = document.createElement('div');
-      wrapperDiv.className =
-        'overflow-wrapper overflow-x-auto custom-scrollbar';
-      calendarDiv.parentElement?.insertBefore(wrapperDiv, calendarDiv);
-      wrapperDiv.appendChild(calendarDiv);
-    }
-  }, []);
+
   return (
-    <div ref={calendarRef}>
-      <Calendar
-        localizer={localizer}
-        date={value}
-        events={events}
-        views={['month']}
-        defaultView="month"
-        showAllEvents
-        toolbar
-        className="h-full"
-        max={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
-        formats={{
-          weekdayFormat: (date, culture, localizer) =>
-            localizer?.format(date, ' EEE', culture) ?? '',
-        }}
-        components={{
-          eventWrapper: ({ event }) => (
-            <EventCard
-              id={event.id}
-              title={event.title}
-              assignee={event.assignee}
-              project={event.project}
-              status={event.status}
-            />
-          ),
-          toolbar: () => (
-            <CustomToolbar date={value} onNavigate={handleNavigate} />
-          ),
-        }}
-      />
+    <div className="relative">
+      <div className="overflow-x-auto custom-scrollbar">
+        <Calendar
+          localizer={localizer}
+          date={value}
+          events={events}
+          views={['month']}
+          defaultView="month"
+          showAllEvents
+          toolbar
+          className="h-full"
+          max={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
+          formats={{
+            weekdayFormat: (date, culture, localizer) =>
+              localizer?.format(date, ' EEE', culture) ?? '',
+          }}
+          components={{
+            eventWrapper: ({ event }) => (
+              <EventCard
+                id={event.id}
+                title={event.title}
+                assignee={event.assignee}
+                project={event.project}
+                status={event.status}
+              />
+            ),
+            toolbar: () => (
+              <CustomToolbar date={value} onNavigate={handleNavigate} />
+            ),
+          }}
+        />
+      </div>
     </div>
   );
 }
