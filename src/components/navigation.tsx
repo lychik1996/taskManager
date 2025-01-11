@@ -36,7 +36,10 @@ const routes = [
     acitveIcon: UsersIcon,
   },
 ];
-export default function Navigation() {
+interface NavigationProps{
+  onClose?:Function;
+}
+export default function Navigation({onClose}:NavigationProps) {
   const workspaceId = useWorkspaceId();
   const pathname = usePathname();
   return (
@@ -46,7 +49,9 @@ export default function Navigation() {
         const isActive = pathname === fullHref;
         const Icon = isActive ? item.acitveIcon : item.icon;
         return (
-          <Link key={item.href} href={fullHref}>
+          <Link key={item.href} href={fullHref} onClick={()=>{
+            onClose?.(false)}
+          }>
             <div
               className={cn(
                 'flex items-start gap-2.5 p-2.5 rounded-md font-medium hover:text-primary transition text-neutral-500 ',

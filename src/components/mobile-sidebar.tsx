@@ -28,7 +28,7 @@ export default function MobileSidebar() {
 
       <SheetContent side="left" className="p-0" aria-describedby={undefined}>
         <SheetTitle className="sr-only"> Navigation menu</SheetTitle>
-        <Sidebar />
+        <Sidebar  onClose={setIsOpen}/>
       </SheetContent>
     </Sheet>
   );

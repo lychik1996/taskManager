@@ -6,7 +6,10 @@ import WorkspaceSwitcher from './workspace-switcher';
 import Projects from './projects';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
-export default function Sidebar() {
+interface SidebarProps{
+  onClose?:Function;
+}
+export default function Sidebar({onClose}:SidebarProps) {
   return (
     <ScrollArea className='h-full bg-neutral-100'>
       <aside className="min-h-screen bg-neutral-100 p-4 w-full">
@@ -16,9 +19,9 @@ export default function Sidebar() {
       <DottedSeparator className="my-4" />
       <WorkspaceSwitcher />
       <DottedSeparator className="my-4" />
-      <Navigation />
+      <Navigation onClose={onClose}/>
       <DottedSeparator className="my-4" />
-      <Projects />
+      <Projects  onClose={onClose}/>
     </aside>
       <ScrollBar/>
     </ScrollArea>

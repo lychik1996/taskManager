@@ -7,7 +7,10 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { RiAddCircleFill } from 'react-icons/ri';
-export default function Projects() {
+interface ProjectProps{
+  onClose?:Function;
+}
+export default function Projects({onClose}:ProjectProps) {
   const pathname = usePathname();
   const { open } = useCreateProjectModal();
   const workspaceId = useWorkspaceId();
@@ -29,7 +32,7 @@ export default function Projects() {
         const href = `/workspaces/${workspaceId}/projects/${project.$id}`;
         const isActive = pathname === href;
         return (
-          <Link href={href} key={project.$id}>
+          <Link href={href} key={project.$id} onClick={()=>onClose?.(false)}>
             <div
               className={cn(
                 'flex items-center gap-2.5 p-2.5 rounded-md hover:opacity-75 transition cursor-pointer text-neutral-500',
