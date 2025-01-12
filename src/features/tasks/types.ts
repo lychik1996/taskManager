@@ -35,3 +35,33 @@ export type Task = Models.Document & {
     $updatedAt: string;
   };
 };
+
+type T = string | null;
+export type TaskHistoryValue = null | {
+  name:T,
+  projectId:T,
+  status:TaskStatus,
+  dueDate:T,
+  assigneeId:T,
+  description:T,
+  [key: string]: T
+}
+
+export enum TaskField {
+  CREATE = "CREATE",
+  STATUS = "STATUS",
+  NAME = "NAME",
+  PROJECT_ID = "PROJECT_ID",
+  DUE_DATE = "DUE_DATE",
+  ASSIGNEE_ID = "ASSIGNEE_ID",
+  DESCRIPTION = "DESCRIPTION",
+}
+
+export type TaskHistory = Models.Document &{
+  taskId:string,
+  changedBy:string,
+  fields:TaskField[],
+  oldValue:string | null,
+  newValue:string,
+}
+

@@ -1,8 +1,9 @@
-import { DATABASE_ID, PROJECTS_ID } from '@/config';
+import { DATABASE_ID, PROJECTS_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { Project } from '@/features/projects/types';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
+import { Query } from 'node-appwrite';
 
 export async function DELETE(
   req: NextRequest,
@@ -10,7 +11,7 @@ export async function DELETE(
 ) {
   try {
     const { projectId } = await params;
-    console.log(projectId);
+    
     if (!projectId) {
       return NextResponse.json(
         { message: 'projectId is missing' },
@@ -40,7 +41,35 @@ export async function DELETE(
     if (!member) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    //TODO: Delete  tasks
+
+    const tasks = await databases.listDocuments(DATABASE_ID, TASKS_ID, [
+      Query.equal('projectId', projectId),
+    ]);
+
+    for (const task of tasks.documents) {
+      try {
+        const taskHistories = await databases.listDocuments(
+          DATABASE_ID,
+          TASKS_HISTORY_ID,
+          [Query.equal('taskId', task.$id)]
+        );
+        for (const history of taskHistories.documents) {
+          try {
+            await databases.deleteDocument(
+              DATABASE_ID,
+              TASKS_HISTORY_ID,
+              history.$id
+            );
+          } catch (e) {
+            console.error(`Failed to delete taskHistory: ${history.id}`, e);
+          }
+        }
+        await databases.deleteDocument(DATABASE_ID, TASKS_ID, task.$id);
+      } catch (e) {
+        console.error(`Failed to delete task: ${task.$id}`, e);
+      }
+    }
+
     await databases.deleteDocument(DATABASE_ID, PROJECTS_ID, projectId);
 
     return NextResponse.json({ data: { $id: existingProject.workspaceId } });

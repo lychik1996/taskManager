@@ -3,9 +3,9 @@ import { getMember } from '@/features/members/utils';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { DATABASE_ID, TASKS_ID } from '@/config';
+import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
-import { Task } from '@/features/tasks/types';
+import { Task, TaskField, TaskHistory, TaskHistoryValue } from '@/features/tasks/types';
 
 export async function POST(req: NextRequest) {
   try {
@@ -57,6 +57,26 @@ export async function POST(req: NextRequest) {
         position: newPosition,
       }
     );
+    const newValue : TaskHistoryValue = {
+      name,
+      projectId,
+      status,
+      dueDate,
+      assigneeId,
+      description:null,
+    };
+    await databases.createDocument<TaskHistory>(
+      DATABASE_ID,
+      TASKS_HISTORY_ID,
+      ID.unique(),
+      {
+        taskId:task.$id,
+        changedBy:user.$id,
+        fields:[TaskField.CREATE],
+        oldValue:null,
+        newValue: JSON.stringify(newValue),
+      }
+    )
     return NextResponse.json({ task });
   } catch {
     return NextResponse.json(

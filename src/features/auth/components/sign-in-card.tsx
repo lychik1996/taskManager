@@ -34,7 +34,7 @@ export default function SignInCard() {
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
     mutate(values, {
       onSuccess: (data) => {
-        console.log(data);
+        
       },
     });
   };

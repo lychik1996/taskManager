@@ -40,7 +40,7 @@ export default function SignUpCard() {
   const onSubmit = (values: z.infer<typeof registerSchema>) => {
     mutate(values, {
       onSuccess: (data) => {
-        console.log(data);
+        
       },
     });
   };

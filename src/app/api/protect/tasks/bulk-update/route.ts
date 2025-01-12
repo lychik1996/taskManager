@@ -3,9 +3,15 @@ import { getMember } from '@/features/members/utils';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { DATABASE_ID, TASKS_ID } from '@/config';
-import { Query } from 'node-appwrite';
-import { Task, TaskStatus } from '@/features/tasks/types';
+import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
+import { ID, Query } from 'node-appwrite';
+import {
+  Task,
+  TaskField,
+  TaskHistory,
+  TaskHistoryValue,
+  TaskStatus,
+} from '@/features/tasks/types';
 
 export async function POST(req: NextRequest) {
   try {
@@ -62,6 +68,42 @@ export async function POST(req: NextRequest) {
     const updatedTasks = await Promise.all(
       tasks.map(async (task) => {
         const { $id, status, position } = task;
+        try {
+          const taskHistories = await databases.listDocuments<TaskHistory>(
+            DATABASE_ID,
+            TASKS_HISTORY_ID,
+            [
+              Query.equal('taskId', $id),
+              Query.orderDesc('$createdAt'),
+              Query.limit(1),
+            ]
+          );
+          const oldValueJSON = taskHistories.documents[0].newValue;
+          const oldValue: TaskHistoryValue = oldValueJSON
+            ? JSON.parse(oldValueJSON)
+            : null;
+          if (oldValue && status !== oldValue.status) {
+            const newValue: TaskHistoryValue = {
+              ...oldValue,
+              status,
+            };
+            await databases.createDocument<TaskHistory>(
+              DATABASE_ID,
+              TASKS_HISTORY_ID,
+              ID.unique(),
+              {
+                taskId: $id,
+                changedBy: user.$id,
+                fields: [TaskField.STATUS],
+                oldValue: oldValueJSON,
+                newValue: JSON.stringify(newValue),
+              }
+            );
+          }
+        } catch (e) {
+          console.error(`Failed to add new taskHistory: ${$id}`, e);
+        }
+
         return databases.updateDocument<Task>(DATABASE_ID, TASKS_ID, $id, {
           status,
           position,

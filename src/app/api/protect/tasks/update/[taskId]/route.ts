@@ -1,7 +1,7 @@
-import { DATABASE_ID, TASKS_ID } from '@/config';
+import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
 
 import { getMember } from '@/features/members/utils';
-import { Task } from '@/features/tasks/types';
+import { Task, TaskHistory } from '@/features/tasks/types';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -35,6 +35,19 @@ export async function PATCH(
     if (!member) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+
+    // const taskHistory = await databases.createDocument<TaskHistory>(
+    //   DATABASE_ID,
+    //   TASKS_HISTORY_ID,
+    //   ID.unique(),
+    //   {
+    //     taskId,
+    //     changedBy: user.$id,
+    //     field: 'status',
+    //     oldValue: oldValueJSON,
+    //     newValue: JSON.stringify(newValue),
+    //   }
+    // );
 
     const task = await databases.updateDocument<Task>(
       DATABASE_ID,

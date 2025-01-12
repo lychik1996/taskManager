@@ -79,7 +79,6 @@ export default function EditWorkSpaceForm({
       { param: initialValues.$id },
       {
         onSuccess: ({ data }) => {
-          console.log(data);
           router.push('/');
         },
       }

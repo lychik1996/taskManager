@@ -1,8 +1,9 @@
-import { DATABASE_ID, TASKS_ID } from '@/config';
+import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { Task } from '@/features/tasks/types';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
+import { Query } from 'node-appwrite';
 
 export async function DELETE(
   req: NextRequest,
@@ -39,8 +40,24 @@ export async function DELETE(
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
+    const tasksHistories = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_HISTORY_ID,
+      [Query.equal('taskId', taskId)]
+    );
 
+    for (const history of tasksHistories.documents) {
+      try {
+        await databases.deleteDocument(
+          DATABASE_ID,
+          TASKS_HISTORY_ID,
+          history.$id
+        );
+      } catch (e) {
+        console.error(`Failed to delete taskHistory: ${history.id}`, e);
+      }
+    }
+    await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
     return NextResponse.json({
       data: {
         $id: task.$id,
