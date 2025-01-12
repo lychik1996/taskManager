@@ -17,6 +17,9 @@ import { TaskStatus } from '../types';
 import { useBulkUpdateTasks } from '../api/use-bulk-update-tasks';
 import DataCalendar from './data-calendar';
 import { useProjectId } from '@/features/projects/hooks/use-project-id';
+import { useDebounce } from '../hooks/use-debounce';
+import { string } from 'zod';
+
 
 interface TaskViewSwitcherProps {
   hideProjectFilter?: boolean;
@@ -25,8 +28,9 @@ interface TaskViewSwitcherProps {
 export default function TaskViewSwitcher({
   hideProjectFilter,
 }: TaskViewSwitcherProps) {
-  const [{ status, assigneeId, dueDate, projectId }, setFilters] =
+  const [{ status, assigneeId, dueDate, projectId, search }, setFilters] =
     useTaskFilters();
+    const debounceSearch = useDebounce(search,300);
   const [view, setView] = useQueryState('task-view', {
     defaultValue: 'table',
   });
@@ -41,6 +45,7 @@ export default function TaskViewSwitcher({
     assigneeId,
     status,
     dueDate,
+    search:debounceSearch,
   });
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
@@ -89,12 +94,10 @@ export default function TaskViewSwitcher({
               <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="kanban" className="mt-0">
-              
-                <DataKanban
-                  onChange={onKanbanChange}
-                  data={tasks?.documents ?? []}
-                />
-                
+              <DataKanban
+                onChange={onKanbanChange}
+                data={tasks?.documents ?? []}
+              />
             </TabsContent>
 
             <TabsContent value="calendar" className="mt-0 h-full pb-4">
