@@ -36,32 +36,42 @@ export type Task = Models.Document & {
   };
 };
 
-type T = string | null;
-export type TaskHistoryValue = null | {
-  name:T,
-  projectId:T,
-  status:TaskStatus,
-  dueDate:T,
-  assigneeId:T,
-  description:T,
-  [key: string]: T
-}
+
+
+export type TaskHistoryValue = {
+  name: string | null;
+  projectId: string | { imageUrl: string | null; name: string; id:string};
+  status: TaskStatus;
+  dueDate: string | null;
+  assigneeId:
+    | string
+    | { name: string; role: string; email:string; id:string};
+  description: string | null;
+};
 
 export enum TaskField {
-  CREATE = "CREATE",
-  STATUS = "STATUS",
-  NAME = "NAME",
-  PROJECT_ID = "PROJECT_ID",
-  DUE_DATE = "DUE_DATE",
-  ASSIGNEE_ID = "ASSIGNEE_ID",
-  DESCRIPTION = "DESCRIPTION",
+  CREATE = 'create',
+  STATUS = 'status',
+  NAME = 'name',
+  PROJECT_ID = 'project',
+  DUE_DATE = 'dueDate',
+  ASSIGNEE_ID = 'assignee',
+  DESCRIPTION = 'description',
 }
 
-export type TaskHistory = Models.Document &{
-  taskId:string,
-  changedBy:string,
-  fields:TaskField[],
-  oldValue:string | null,
-  newValue:string,
-}
-
+export type TaskHistory = Models.Document & {
+  taskId: string;
+  changedBy: string;
+  fields: TaskField[];
+  oldValue: string;
+  newValue: string;
+};
+export type TaskHistoryParse = Models.Document & {
+  taskId: string;
+  changedBy:
+    | string
+    | { name: string; role: string; email:string; id:string};
+  fields: TaskField[];
+  oldValue: TaskHistoryValue;
+  newValue: TaskHistoryValue;
+};

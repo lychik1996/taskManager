@@ -8,17 +8,22 @@ import TaskDescription from '@/features/tasks/components/task-description';
 import TaskBreadcrumbs from '@/features/tasks/components/task-breadcrumbs';
 import TaskOverview from '@/features/tasks/components/task-overview';
 import { useTaskId } from '@/features/tasks/hooks/use-task-id';
+import { useGetHistories } from '@/features/tasks/api/use-get-histories';
+import TaskHistories from '@/features/tasks/components/task-histories';
 
 export default function TaskIdClient() {
   const taskId = useTaskId();
   const { data, isLoading } = useGetTask(taskId);
-
+  const {data:taskHistories, isLoading:isLoadingTaskHistories} = useGetHistories(taskId);
   if (isLoading) {
     return <PageLoader />;
   }
 
   if (!data) {
     return <PageError message="Task not found" />;
+  }
+  if(!taskHistories){
+    return <PageError message='TaskHistories not found'/>
   }
   return (
     <div className="flex flex-col ">
@@ -27,6 +32,7 @@ export default function TaskIdClient() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TaskOverview task={data} />
         <TaskDescription task={data} />
+        <TaskHistories taskHistories={taskHistories}/>
       </div>
     </div>
   );

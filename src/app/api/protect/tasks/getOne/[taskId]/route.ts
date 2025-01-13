@@ -35,7 +35,7 @@ export async function GET(
       userId: currentUser.$id,
     });
     if (!currentMember) {
-      return NextResponse.json({ message: 'unauthorized' }, { status: 401 });
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     const project = await databases.getDocument<Project>(
       DATABASE_ID,
@@ -48,7 +48,7 @@ export async function GET(
       MEMBERS_ID,
       task.assigneeId
     );
-
+    
     const user = await users.get(member.userId);
 
     const assignee = {

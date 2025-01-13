@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
         taskId:task.$id,
         changedBy:user.$id,
         fields:[TaskField.CREATE],
-        oldValue:null,
+        oldValue:JSON.stringify(newValue),
         newValue: JSON.stringify(newValue),
       }
     )
