@@ -15,15 +15,11 @@ export default function TaskIdClient() {
   const taskId = useTaskId();
   const { data, isLoading } = useGetTask(taskId);
   const {data:taskHistories, isLoading:isLoadingTaskHistories} = useGetHistories(taskId);
-  if (isLoading) {
+  if (isLoading || isLoadingTaskHistories) {
     return <PageLoader />;
   }
-
-  if (!data) {
+  if (!data || !taskHistories) {
     return <PageError message="Task not found" />;
-  }
-  if(!taskHistories){
-    return <PageError message='TaskHistories not found'/>
   }
   return (
     <div className="flex flex-col ">

@@ -96,10 +96,6 @@ export async function PATCH(
           (newValue as any)[key] = value;
         }
       }
-      console.log(existingTask.dueDate);
-      console.log(oldValue);
-      console.log(fields);
-      console.log(newValue);
 
       if (fields.length > 0) {
          await databases.createDocument<TaskHistory>(

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const getHistories = async (param: string) => {
   const res = await axios.get(`/api/protect/tasks/getHistories/${param}`);
-  return res.data.taskHistoriesParse;
+  return res.data.filterTaskHistories;
 };
 
 export const useGetHistories = (taskId: string) => {

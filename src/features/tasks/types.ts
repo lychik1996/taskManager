@@ -53,9 +53,9 @@ export enum TaskField {
   CREATE = 'create',
   STATUS = 'status',
   NAME = 'name',
-  PROJECT_ID = 'project',
+  PROJECT_ID = 'projectId',
   DUE_DATE = 'dueDate',
-  ASSIGNEE_ID = 'assignee',
+  ASSIGNEE_ID = 'assigneeId',
   DESCRIPTION = 'description',
 }
 
