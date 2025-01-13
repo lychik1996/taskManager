@@ -12,14 +12,21 @@ import { cn } from '@/lib/utils';
 import { TaskField } from '../types';
 import { format } from 'date-fns';
 import ProjectAvatar from '@/features/projects/components/project-avatar';
+import { useMedia } from 'react-use';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface TaskHistoriesProps {
   taskHistories: ResponseTaskHistories[];
 }
 export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
-  console.log(taskHistories);
+  const isDesktop = useMedia('(min-width:1024px)', true);
+
   return (
-    <div className="flex flex-col gap-y-4 col-span-1">
+    <div className="flex flex-col gap-y-4 col-span-1 select-none">
       <div className="bg-muted rounded-lg p-4">
         <p className="text-lg font-semibold"> Task Histories</p>
         <DottedSeparator className="my-4" />
@@ -35,33 +42,63 @@ export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
               >
                 <div className="flex items-center gap-x-2">
                   <p className=" text-muted-foreground">User</p>
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <div className="flex items-center gap-x-2 cursor-pointer p-1 border rounded-lg bg-white min-w-[80px] overflow-hidden">
-                        <MemberAvatar
-                          name={history.changedBy.name}
-                          className="size-6"
-                        />
-                        <p className="text-sm font-medium">
-                          {history.changedBy.name}
+                  {isDesktop ? (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <div className="flex items-center gap-x-2 cursor-pointer p-1 border rounded-lg bg-white min-w-[80px] overflow-hidden">
+                          <MemberAvatar
+                            name={history.changedBy.name}
+                            className="size-6"
+                          />
+                          <p className="text-sm font-medium">
+                            {history.changedBy.name}
+                          </p>
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        align="start"
+                        className="bg-gray-100 p-2 rounded-lg flex flex-col max-w-[180px]  overflow-hidden cursor-default"
+                      >
+                        <p className="text-xs text-muted-foreground">
+                          Name: {history.changedBy.name}
                         </p>
-                      </div>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      align="start"
-                      className="bg-gray-100 p-2 rounded-lg flex flex-col max-w-[180px]  overflow-hidden cursor-default"
-                    >
-                      <p className="text-xs text-muted-foreground">
-                        Name: {history.changedBy.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Email: {history.changedBy.email}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Role: {history.changedBy.role}
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
+                        <p className="text-xs text-muted-foreground">
+                          Email: {history.changedBy.email}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Role: {history.changedBy.role}
+                        </p>
+                      </PopoverContent>
+                    </Popover>
+                  ) : (
+                    <HoverCard>
+                      <HoverCardTrigger asChild>
+                        <div className="flex items-center gap-x-2 cursor-pointer p-1 border rounded-lg bg-white min-w-[80px] overflow-hidden">
+                          <MemberAvatar
+                            name={history.changedBy.name}
+                            className="size-6"
+                          />
+                          <p className="text-sm font-medium">
+                            {history.changedBy.name}
+                          </p>
+                        </div>
+                      </HoverCardTrigger>
+                      <HoverCardContent
+                        align="start"
+                        className="bg-gray-100 p-2 rounded-lg flex flex-col max-w-[180px]  overflow-hidden cursor-default"
+                      >
+                        <p className="text-xs text-muted-foreground">
+                          Name: {history.changedBy.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Email: {history.changedBy.email}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Role: {history.changedBy.role}
+                        </p>
+                      </HoverCardContent>
+                    </HoverCard>
+                  )}
                 </div>
                 <div
                   className={cn(
@@ -71,13 +108,23 @@ export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
                 >
                   Created task!
                 </div>
-                <div className={cn('flex flex-col gap-2 p-2 border rounded bg-white', isCreate && 'hidden')}>
+                <div
+                  className={cn(
+                    'flex flex-col gap-2 p-2 border rounded bg-white',
+                    isCreate && 'hidden'
+                  )}
+                >
                   {history.fields.map((field, i) => {
                     const isAssignee = field === TaskField.ASSIGNEE_ID;
                     const isProject = field === TaskField.PROJECT_ID;
                     return (
-                      <div key={i} className="flex flex-col gap-1 border rounded-sm p-2">
-                        <p className='text-sm text-muted-foreground'>Change task {field.toLowerCase()} from</p>
+                      <div
+                        key={i}
+                        className="flex flex-col gap-1 border rounded-sm p-2"
+                      >
+                        <p className="text-sm text-muted-foreground">
+                          Change task {field.toLowerCase()} from
+                        </p>
                         <div
                           className={cn(
                             'flex flex-row gap-2 items-center',
@@ -116,13 +163,17 @@ export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
                           </p>
                         </div>
                         <p
-                          className={cn("text-sm text-muted-foreground",{
-                            'hidden': isProject || isAssignee,
+                          className={cn('text-sm text-muted-foreground', {
+                            hidden: isProject || isAssignee,
                           })}
                         >
-                          {JSON.stringify(history.oldValue[field as keyof typeof history.oldValue])}
+                          {JSON.stringify(
+                            history.oldValue[
+                              field as keyof typeof history.oldValue
+                            ]
+                          )}
                         </p>
-                        <p className='text-sm text-muted-foreground'>to</p>
+                        <p className="text-sm text-muted-foreground">to</p>
                         <div
                           className={cn(
                             'flex flex-row gap-2 items-center',
@@ -161,11 +212,15 @@ export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
                           </p>
                         </div>
                         <p
-                          className={cn("text-sm text-muted-foreground",{
-                            'hidden': isProject || isAssignee,
+                          className={cn('text-sm text-muted-foreground', {
+                            hidden: isProject || isAssignee,
                           })}
                         >
-                          {JSON.stringify(history.newValue[field as keyof typeof history.newValue])}
+                          {JSON.stringify(
+                            history.newValue[
+                              field as keyof typeof history.newValue
+                            ]
+                          )}
                         </p>
                       </div>
                     );
