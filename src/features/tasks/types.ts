@@ -39,15 +39,15 @@ export type Task = Models.Document & {
 
 
 export type TaskHistoryValue = {
-  name: string | null;
-  projectId: string | { imageUrl: string | null; name: string; id:string};
-  status: TaskStatus;
-  dueDate: string | null;
-  assigneeId:
+  name?: string | null;
+  projectId?: string | { imageUrl: string | null; name: string; id:string};
+  status?: TaskStatus;
+  dueDate?: string | null;
+  assigneeId?:
     | string
     | { name: string; role: string; email:string; id:string};
-  description: string | null;
-};
+  description?: string | null;
+} & {};
 
 export enum TaskField {
   CREATE = 'create',

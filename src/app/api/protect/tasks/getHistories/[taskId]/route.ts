@@ -76,7 +76,7 @@ export async function GET(
       });
     }
 
-    //get and parse task histories
+    //get,parse,filter task histories
     const taskHistories = await databases.listDocuments<TaskHistory>(
       DATABASE_ID,
       TASKS_HISTORY_ID,
@@ -118,34 +118,38 @@ export async function GET(
       };
     });
 
-    const allowedFields = Object.values(TaskField); // Масив дозволених полів з TaskField
+    
+    const filterTaskHistories = taskHistoriesParse.map((history) => {
+      const { fields } = history;
+      const allowedInCurrentFields = fields.includes(TaskField.CREATE)
+        ? []
+        : fields;
 
-const filterTaskHistories = taskHistoriesParse.map((history) => {
-  const { fields } = history; // Поля, які треба залишити
-  const allowedInCurrentFields = fields.includes(TaskField.CREATE) ? [] : fields;
+      const filterFields = (
+        obj: Record<string, any>,
+        allowedFields: string[]
+      ) => {
+        if (allowedInCurrentFields.length === 0) {
+          return {};
+        }
 
-  const filterFields = (
-    obj: Record<string, any>,
-    allowedFields: string[]
-  ) => {
-    if (allowedInCurrentFields.length === 0) {
-      return {}; // Якщо поле `create` і ніякі інші, повертаємо порожній об'єкт
-    }
+        return Object.keys(obj).reduce(
+          (acc, key) => {
+            if (allowedFields.includes(key)) {
+              acc[key] = obj[key];
+            }
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+      };
 
-    return Object.keys(obj).reduce((acc, key) => {
-      if (allowedFields.includes(key)) {
-        acc[key] = obj[key];
-      }
-      return acc;
-    }, {} as Record<string, any>);
-  };
-
-  return {
-    ...history,
-    oldValue: filterFields(history.oldValue, allowedInCurrentFields),
-    newValue: filterFields(history.newValue, allowedInCurrentFields),
-  };
-});
+      return {
+        ...history,
+        oldValue: filterFields(history.oldValue, allowedInCurrentFields),
+        newValue: filterFields(history.newValue, allowedInCurrentFields),
+      };
+    });
     console.log(filterTaskHistories);
     return NextResponse.json({ filterTaskHistories });
   } catch {
