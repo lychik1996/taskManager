@@ -120,7 +120,7 @@ export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
                             'hidden': isProject || isAssignee,
                           })}
                         >
-                          {JSON.stringify(history.oldValue[field])}
+                          {JSON.stringify(history.oldValue[field as keyof typeof history.oldValue])}
                         </p>
                         <p className='text-sm text-muted-foreground'>to</p>
                         <div
@@ -165,7 +165,7 @@ export default function TaskHistories({ taskHistories }: TaskHistoriesProps) {
                             'hidden': isProject || isAssignee,
                           })}
                         >
-                          {JSON.stringify(history.newValue[field])}
+                          {JSON.stringify(history.newValue[field as keyof typeof history.newValue])}
                         </p>
                       </div>
                     );
