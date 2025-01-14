@@ -6,7 +6,6 @@ import PageError from '@/components/page-error';
 import PageLoader from '@/components/page-loader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useGetMembers } from '@/features/members/api/use-get-members';
 import MemberAvatar from '@/features/members/components/member-avatar';
 import { Member } from '@/features/members/types';

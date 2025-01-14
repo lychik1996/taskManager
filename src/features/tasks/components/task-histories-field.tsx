@@ -19,7 +19,7 @@ export default function TaskHistoriesFieldChangeDetails({
         const isAssignee = field === TaskField.ASSIGNEE_ID;
         const isProject = field === TaskField.PROJECT_ID;
         const isDate = field === TaskField.DUE_DATE;
-        
+        const isLast = i===history.fields.length-1;
         const oldValue: string = history.oldValue[
           field as keyof typeof history.oldValue
         ]
@@ -138,7 +138,7 @@ export default function TaskHistoriesFieldChangeDetails({
                   : newValue
                 }
             </p>
-            <DottedSeparator className="w-full" />
+            {!isLast && <DottedSeparator className="w-full" />}
           </div>
         );
       })}
