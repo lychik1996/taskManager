@@ -19,6 +19,7 @@ export default function TaskHistoriesFieldChangeDetails({
         const isAssignee = field === TaskField.ASSIGNEE_ID;
         const isProject = field === TaskField.PROJECT_ID;
         const isDate = field === TaskField.DUE_DATE;
+        
         const oldValue: string = history.oldValue[
           field as keyof typeof history.oldValue
         ]
@@ -26,6 +27,7 @@ export default function TaskHistoriesFieldChangeDetails({
               history.oldValue[field as keyof typeof history.oldValue]
             ).toLowerCase()
           : '';
+          
         const newValue: string = history.newValue[
           field as keyof typeof history.newValue
         ]
@@ -35,8 +37,6 @@ export default function TaskHistoriesFieldChangeDetails({
           : '';
         const formattedField = field.toLowerCase().endsWith('id')
           ? field.toLowerCase().slice(0, -2)
-          : field.toLowerCase().startsWith('due')
-          ? field.toLowerCase().slice(3)
           : field.toLowerCase();
         return (
           <div key={i} className="flex flex-col gap-1 p-2 text-xs">
@@ -85,10 +85,9 @@ export default function TaskHistoriesFieldChangeDetails({
                 })}
               >
                 {isDate
-                  ? oldValue && !isNaN(Date.parse(oldValue))
-                    ? format(new Date(oldValue), 'PPP')
-                    : 'N/A'
-                  : oldValue}
+                ? format(new Date(history.oldValue.dueDate as string), 'PPP')
+                  : oldValue
+                }
               </span>
             </div>
             <p className=" text-muted-foreground">to</p>
@@ -135,10 +134,9 @@ export default function TaskHistoriesFieldChangeDetails({
               })}
             >
               {isDate
-                ? oldValue && !isNaN(Date.parse(oldValue))
-                  ? format(new Date(oldValue), 'PPP')
-                  : 'N/A'
-                : oldValue}
+                ? format(new Date(history.newValue.dueDate as string), 'PPP')
+                  : newValue
+                }
             </p>
             <DottedSeparator className="w-full" />
           </div>
