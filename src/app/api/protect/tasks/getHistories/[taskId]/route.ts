@@ -29,7 +29,6 @@ export async function GET(
     }
 
     const databases = context.databases;
-    const userB = context.user;
     const { taskId } = await params;
     const { users } = await createAdminClient();
 
@@ -51,22 +50,10 @@ export async function GET(
     const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
       Query.equal('workspaceId', task.workspaceId),
     ]);
-
-    //get assignees and currentUser
-    let currentUser = {
-      name: userB.name || userB.email,
-      email: userB.email,
-      id: userB.$id,
-      role: '',
-    };
+    
+    const changedUsers:any[] = [];
     const assignees: any[] = [];
     for (let member of members.documents) {
-      if (member.userId === userB.$id) {
-        currentUser = {
-          ...currentUser,
-          role: member.role,
-        };
-      }
       const assignee = await users.get(member.userId);
       assignees.push({
         name: assignee.name || assignee.email,
@@ -74,8 +61,13 @@ export async function GET(
         id: member.$id,
         role: member.role,
       });
+      changedUsers.push({
+        name:assignee.name || assignee.email,
+        email:assignee.email,
+        id:assignee.$id,
+        role:member.role,
+      })
     }
-
     //get,parse,filter task histories
     const taskHistories = await databases.listDocuments<TaskHistory>(
       DATABASE_ID,
@@ -88,8 +80,10 @@ export async function GET(
         oldValue: JSON.parse(history.oldValue) as TaskHistoryValue,
         newValue: JSON.parse(history.newValue) as TaskHistoryValue,
       }));
-
-    const taskHistoriesParse = taskHistoriesPreParse.map((history) => {
+      
+      
+    const taskHistoriesParse = taskHistoriesPreParse.map( (history) => {
+      const changedUser =changedUsers.find(changed=>changed.id ===history.changedBy);
       const oldValueAssignee = assignees.find(
         (assignee) => assignee.id === history.oldValue.assigneeId
       );
@@ -104,7 +98,7 @@ export async function GET(
       );
       return {
         ...history,
-        changedBy: currentUser,
+        changedBy: changedUser,
         oldValue: {
           ...history.oldValue,
           assigneeId: oldValueAssignee,
@@ -150,7 +144,6 @@ export async function GET(
         newValue: filterFields(history.newValue, allowedInCurrentFields),
       };
     });
-    console.log(filterTaskHistories);
     return NextResponse.json({ filterTaskHistories });
   } catch {
     return NextResponse.json(
