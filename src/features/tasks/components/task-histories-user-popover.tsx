@@ -30,7 +30,7 @@ export default function TaskHistoriesUserPopover({
         <PopoverTrigger asChild>
           <div className="flex items-center gap-x-2 cursor-pointer p-1  min-w-[80px] overflow-hidden">
             <MemberAvatar name={user.name} className="size-6" />
-            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-xs font-medium w-14 text-muted-foreground truncate">{user.name}</p>
           </div>
         </PopoverTrigger>
         <PopoverContent align='start' className="bg-gray-100 p-2 rounded-lg flex flex-col max-w-[180px] overflow-hidden cursor-default">
