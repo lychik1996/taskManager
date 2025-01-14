@@ -84,7 +84,11 @@ export default function TaskHistoriesFieldChangeDetails({
                   hidden: isProject || isAssignee,
                 })}
               >
-                {isDate ? format(new Date(oldValue), 'PPP') : oldValue}
+                {isDate
+                  ? oldValue && !isNaN(Date.parse(oldValue))
+                    ? format(new Date(oldValue), 'PPP')
+                    : 'N/A'
+                  : oldValue}
               </span>
             </div>
             <p className=" text-muted-foreground">to</p>
@@ -130,7 +134,11 @@ export default function TaskHistoriesFieldChangeDetails({
                 hidden: isProject || isAssignee,
               })}
             >
-              {isDate ? format(new Date(newValue), 'PPP') : newValue}
+              {isDate
+                ? oldValue && !isNaN(Date.parse(oldValue))
+                  ? format(new Date(oldValue), 'PPP')
+                  : 'N/A'
+                : oldValue}
             </p>
             <DottedSeparator className="w-full" />
           </div>
