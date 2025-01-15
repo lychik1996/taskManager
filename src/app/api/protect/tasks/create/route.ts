@@ -1,11 +1,14 @@
+import  nodemailer  from 'nodemailer';
 import { getMember } from '@/features/members/utils';
 
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
+import { DATABASE_ID, EMAIL_PASS, EMAIL_USER, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
 import { Task, TaskField, TaskHistory, TaskHistoryValue } from '@/features/tasks/types';
+
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +20,26 @@ export async function POST(req: NextRequest) {
     const user = context.user;
     const { name, status, workspaceId, projectId, dueDate, assigneeId } =
       await req.json();
-
+    
+    try{
+      const transporter =  nodemailer.createTransport({
+          host:'smtp.gmail.com',
+          port:465,
+          secure:true,
+          auth:{
+            user:EMAIL_USER,
+            pass:EMAIL_PASS,
+          }
+        })
+      await transporter.sendMail({
+        to:"vitaliy.khatsey@gmail.com",
+      subject:"My Subject",
+      html:"<h1>Hello</h1>"
+      });
+      console.log("Good send")
+    }catch(e){
+      console.error("failed to send",e)
+    }
     const member = await getMember({
       databases,
       workspaceId,
