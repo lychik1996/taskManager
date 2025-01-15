@@ -1,12 +1,14 @@
-"use-server";
+'use server';
+
 import nodemailer from 'nodemailer';
 import { EMAIL_PASS, EMAIL_USER } from '@/config';
-interface SendEmailProps{
-    to:string,
-    subject:string,
-    html:string,
+
+interface SendEmailProps {
+  to: string;
+  subject: string;
+  html: string;
 }
-export async function sendEmail({ to, subject, html }:SendEmailProps) {
+export async function sendEmail({ to, subject, html }: SendEmailProps) {
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -27,3 +29,4 @@ export async function sendEmail({ to, subject, html }:SendEmailProps) {
     console.error('Failed to send email', e);
   }
 }
+

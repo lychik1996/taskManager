@@ -1,8 +1,5 @@
-
-import nodemailer from 'nodemailer';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { EMAIL_PASS, EMAIL_USER } from '@/config';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,4 +21,3 @@ export function snakeCaseToTitleCase(str: string) {
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
-

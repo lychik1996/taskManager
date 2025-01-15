@@ -1,15 +1,19 @@
-
 import { getMember } from '@/features/members/utils';
-
+import EmailTest from '@/components/email/email-test';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
-import { Task, TaskField, TaskHistory, TaskHistoryValue } from '@/features/tasks/types';
+import {
+  Task,
+  TaskField,
+  TaskHistory,
+  TaskHistoryValue,
+} from '@/features/tasks/types';
+
 import { sendEmail } from '@/lib/nodemailer';
-
-
+import { render } from '@react-email/components';
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,12 +25,18 @@ export async function POST(req: NextRequest) {
     const user = context.user;
     const { name, status, workspaceId, projectId, dueDate, assigneeId } =
       await req.json();
-    
-    const email = await sendEmail({
-      to:'vitaliy.khatsey@gmail.com',
-      subject:"Header",
-      html:"Hello"
-    })
+
+    const emailHtml = await render(
+      EmailTest({ name: 'vitaliy', subject: 'sdfsdf' })
+    ).catch((e) => console.error(e));
+    if(emailHtml){
+      const email = await sendEmail({
+        to: 'vitaliy.khatsey@gmail.com',
+        subject: 'Header',
+        html: emailHtml,
+      });
+    }
+
     const member = await getMember({
       databases,
       workspaceId,
@@ -66,26 +76,26 @@ export async function POST(req: NextRequest) {
         position: newPosition,
       }
     );
-    const newValue : TaskHistoryValue = {
+    const newValue: TaskHistoryValue = {
       name,
       projectId,
       status,
       dueDate,
       assigneeId,
-      description:null,
+      description: null,
     };
     await databases.createDocument<TaskHistory>(
       DATABASE_ID,
       TASKS_HISTORY_ID,
       ID.unique(),
       {
-        taskId:task.$id,
-        changedBy:user.$id,
-        fields:[TaskField.CREATE],
-        oldValue:JSON.stringify(newValue),
+        taskId: task.$id,
+        changedBy: user.$id,
+        fields: [TaskField.CREATE],
+        oldValue: JSON.stringify(newValue),
         newValue: JSON.stringify(newValue),
       }
-    )
+    );
     return NextResponse.json({ task });
   } catch {
     return NextResponse.json(
