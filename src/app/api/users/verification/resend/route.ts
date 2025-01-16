@@ -38,11 +38,11 @@ export async function PATCH(req: NextRequest) {
         token,
       }
     );
-    const verificationUrl = `${PUBLIC_APP}verify-email?token=${token}`;
+    const verificationUrl = `${PUBLIC_APP}verify-email/${token}`;
     await sendEmail({
       subject: 'Verfication account',
       to: user.email,
-      html: `<p>Copy your link for verification:</p><p>${verificationUrl}</p>`,
+      html: `<p>Copy your link for verification:</p>${verificationUrl}</a>`,
     });
     return NextResponse.json({ message: 'Succesfully resend token' });
   } catch (e) {

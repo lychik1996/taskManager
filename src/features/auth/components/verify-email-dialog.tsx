@@ -6,15 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { LogOut, Mail, RefreshCcw } from 'lucide-react';
 import { useLogout } from '../api/use-logout';
-import { useSearchParams } from 'next/navigation';
+import { usePathname} from 'next/navigation';
 import { useVerification } from '../api/use-verification';
 import { useEffect } from 'react';
 import { useResendToken } from '../api/use-resend';
+import { useTokenName } from '../hooks/use-token-name';
 
 export default function VerifyEmailDialog() {
   const { mutate: logout,isPending:isPendingLogout} = useLogout();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = useTokenName();
   const {mutate:checkToken}=useVerification();
   const {mutate:resendToken, isPending:isPendingResendToken} = useResendToken();
   const isPending = isPendingLogout || isPendingResendToken

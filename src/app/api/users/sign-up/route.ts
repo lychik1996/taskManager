@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
         token,
       }
     );
-    const verificationUrl = `${PUBLIC_APP}verify-email?token=${token}`;
+    const verificationUrl = `${PUBLIC_APP}verify-email/${token}`;
     await sendEmail({
       subject:"Verfication account",
       to:user.email,
