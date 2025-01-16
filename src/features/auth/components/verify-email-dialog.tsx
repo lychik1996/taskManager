@@ -6,26 +6,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { LogOut, Mail, RefreshCcw } from 'lucide-react';
 import { useLogout } from '../api/use-logout';
-import { usePathname} from 'next/navigation';
 import { useVerification } from '../api/use-verification';
 import { useEffect } from 'react';
-import { useResendToken } from '../api/use-resend';
 import { useTokenName } from '../hooks/use-token-name';
-
+import VerifyEmailTime from './verify-email-time';
 export default function VerifyEmailDialog() {
-  const { mutate: logout,isPending:isPendingLogout} = useLogout();
+  const { mutate: logout, isPending } = useLogout();
   const token = useTokenName();
-  const {mutate:checkToken}=useVerification();
-  const {mutate:resendToken, isPending:isPendingResendToken} = useResendToken();
-  const isPending = isPendingLogout || isPendingResendToken
-  useEffect(()=>{
-    if(token){
-        checkToken({token})
-    }   
-  },[token])
-  const handleResendEmail = () => {
-    resendToken();
-  };
+  const { mutate: checkToken } = useVerification();
+
+  useEffect(() => {
+    if (token) {
+      checkToken({ token });
+    }
+  }, [token, checkToken]);
+
   return (
     <Dialog open={true}>
       <DialogContent
@@ -44,26 +39,23 @@ export default function VerifyEmailDialog() {
           <div className="px-7">
             <DottedSeparator />
           </div>
-          <CardContent className="p-7">
+          <CardContent className="p-7 pb-12">
             <div className="flex flex-col gap-2">
-              <p className="text-muted-foreground flex items-center gap-2">
+              <div className="text-muted-foreground flex items-center gap-2">
                 <Mail className="w-4 h-4 text-muted-foreground" />
                 We have sent a letter to your email address to confirm
                 verification!
-              </p>
-              <p className="text-sm text-muted-foreground flex items-center gap-2">
+              </div>
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
                 <RefreshCcw className="w-4 h-4 text-muted-foreground" />
-                Didn`t receive the email? Check your spam folder or{' '}
-                <Button variant="secondary" onClick={handleResendEmail} disabled={isPending}>
-                  Resend the email
-                </Button>
-                .
-              </p>
+                Didn`t receive the email? Check your spam folder or .
+                <VerifyEmailTime/>
+              </div>
               <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                 <LogOut className="w-4 h-4 text-muted-foreground" />
                 If you entered the wrong email address
                 <Button
-                className='text-black'
+                  className="text-black"
                   variant="ghost"
                   onClick={() => logout()}
                   disabled={isPending}

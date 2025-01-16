@@ -1,11 +1,10 @@
 import { DATABASE_ID, PUBLIC_APP, VERIFICATION_TOKENS_ID } from '@/config';
 import { TokenType } from '@/features/auth/types';
-import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
 import { sendEmail } from '@/lib/nodemailer';
 import { generateVerifyToken } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
-import { ID, Query } from 'node-appwrite';
+import { Query } from 'node-appwrite';
 
 export async function PATCH(req: NextRequest) {
   try {
