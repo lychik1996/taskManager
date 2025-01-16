@@ -31,7 +31,6 @@ export async function GET(
     const databases = context.databases;
     const { taskId } = await params;
     const { users } = await createAdminClient();
-
     const task = await databases.getDocument<Task>(
       DATABASE_ID,
       TASKS_ID,

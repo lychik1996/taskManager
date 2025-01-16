@@ -1,3 +1,5 @@
+export const PUBLIC_APP = process.env.NEXT_PUBLIC_APP!;
+
 export const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!;
 export const WORKSPACES_ID = process.env.NEXT_PUBLIC_APPWRITE_WORKSPACES_ID!;
 export const IMAGES_BUCKET_ID =
@@ -6,5 +8,7 @@ export const MEMBERS_ID = process.env.NEXT_PUBLIC_APPWRITE_MEMBERS_ID!;
 export const PROJECTS_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECTS_ID!;
 export const TASKS_ID = process.env.NEXT_PUBLIC_APPWRITE_TASKS_ID!;
 export const TASKS_HISTORY_ID=process.env.NEXT_PUBLIC_APPWRITE_TASKS_HISTORY_ID!;
+export const VERIFICATION_TOKENS_ID= process.env.NEXT_PUBLIC_APPWRITE_VERIFICATION_TOKENS_ID!;
 export const EMAIL_PASS= process.env.NEXT_PUBLIC_EMAIL_PASS!;
 export const EMAIL_USER = process.env.NEXT_PUBLIC_EMAIL_USER!;
+

@@ -8,6 +8,9 @@ export default async function Home() {
   if (!user) {
     redirect('/sign-in');
   }
+  if(!user?.emailVerification){
+    redirect('/verify-email')
+  }
   const workspaces = await getWorkspaces();
   if (workspaces.total === 0) {
     redirect('/workspaces/create');

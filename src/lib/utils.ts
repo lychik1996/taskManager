@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { randomBytes } from 'crypto';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,6 +14,10 @@ export function generateInviteCode(length: number) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
+}
+export function generateVerifyToken(){
+  const token = randomBytes(32).toString('hex');
+  return token;
 }
 
 export function snakeCaseToTitleCase(str: string) {

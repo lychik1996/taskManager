@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
     const emailHtml = await render(
       EmailTest({ name: 'vitaliy', subject: 'sdfsdf' })
     ).catch((e) => console.error(e));
+    
     if(emailHtml){
       const email = await sendEmail({
         to: 'vitaliy.khatsey@gmail.com',
