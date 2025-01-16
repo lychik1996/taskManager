@@ -5,5 +5,8 @@ import TaskIdClient from './client';
 export default async function TaskIdPage() {
   const user = await getCurrent();
   if (!user) redirect('/sign-in');
+  if (!user.emailVerification) {
+    redirect('/verify-email');
+  }
   return <TaskIdClient />;
 }

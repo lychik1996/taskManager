@@ -6,6 +6,10 @@ import ProjectIdSettingsClient from './client';
 export default async function ProjectIdSettingsPage() {
   const user = await getCurrent();
   if (!user) redirect('/sign-in');
+  
+  if (!user.emailVerification) {
+    redirect('/verify-email');
+  }
 
   return <ProjectIdSettingsClient />;
 }

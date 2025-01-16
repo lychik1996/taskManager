@@ -7,5 +7,8 @@ export default async function WorkspaceId() {
   if (!user) {
     redirect('/sign-in');
   }
+  if (!user.emailVerification) {
+    redirect('/verify-email');
+  }
   return <WorkspaceIdClient />;
 }

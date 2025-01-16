@@ -8,5 +8,8 @@ export default async function WorkSpaceIdSettingsPage() {
 
   if (!user) redirect('/sign-in');
 
+  if (!user.emailVerification) {
+    redirect('/verify-email');
+  }
   return <WorkspaceIdSettingsClient />;
 }

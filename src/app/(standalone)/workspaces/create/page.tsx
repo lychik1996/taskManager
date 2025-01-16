@@ -7,6 +7,9 @@ export default async function WorkspaceCreatePage() {
   if (!user) {
     redirect('/sign-in');
   }
+  if (!user.emailVerification) {
+    redirect('/verify-email');
+  }
   return (
     <div className="w-full lg:max-w-xl">
       <CreateWorkSpaceForm />

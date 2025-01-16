@@ -16,6 +16,9 @@ export default async function WorkspaceJoinPage({
   const user = await getCurrent();
   if (!user) redirect('/sign-in');
 
+  if (!user.emailVerification) {
+    redirect('/verify-email');
+  }
   const initialValues = await getWorkspaceInfo({
     workspaceId: workspaceId,
   });
