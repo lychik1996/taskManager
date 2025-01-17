@@ -1,7 +1,9 @@
-import { DATABASE_ID, MEMBERS_ID } from '@/config';
+import { DATABASE_ID, MEMBERS_ID, PUBLIC_APP, WORKSPACES_ID } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { getMember } from '@/features/members/utils';
+import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
+import { sendEmail } from '@/lib/nodemailer';
 import { NextRequest, NextResponse } from 'next/server';
 import { Query } from 'node-appwrite';
 
@@ -11,6 +13,7 @@ export async function DELETE(
 ) {
   try {
     const { memberId } = await params;
+    const { users } = await createAdminClient();
     if (!memberId) {
       return NextResponse.json(
         { message: 'Failed to get memberId' },
@@ -55,7 +58,38 @@ export async function DELETE(
         { status: 400 }
       );
     }
+
     await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
+
+    //send mail to team in current workspace
+    try {
+      const userToDelete = await users.get(memberToDelete.userId);
+      const workspace = await databases.getDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        memberToDelete.workspaceId
+      );
+      const emailDelete = allMemberInWorkspace.documents.map(
+        async (memberInWorspace) => {
+          const userMember = await users.get(memberInWorspace.userId);
+          if (!userMember) return null;
+          const href = `${PUBLIC_APP}workspaces/${workspace.$id}`;
+          const html =
+            userMember.$id === memberToDelete.userId
+              ? `<p>We left from ${workspace.name}</p>`
+              : `<p>user name:${userToDelete.name}, email:${userToDelete.email} left from our workspace:${workspace.name} link: ${href}</p>`;
+          return await sendEmail({
+            to: userMember.email,
+            subject: 'Left from team',
+            html,
+          });
+        }
+      );
+      await Promise.all(emailDelete);
+    } catch (e) {
+      console.error('Failed to send email', e);
+    }
+
     return NextResponse.json({ data: { $id: memberToDelete.$id } });
   } catch {
     return NextResponse.json(

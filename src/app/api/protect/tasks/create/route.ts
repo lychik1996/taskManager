@@ -3,7 +3,15 @@ import EmailTest from '@/components/email/email-test';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
+import {
+  DATABASE_ID,
+  MEMBERS_ID,
+  PROJECTS_ID,
+  PUBLIC_APP,
+  TASKS_HISTORY_ID,
+  TASKS_ID,
+  WORKSPACES_ID,
+} from '@/config';
 import { ID, Query } from 'node-appwrite';
 import {
   Task,
@@ -14,10 +22,12 @@ import {
 
 import { sendEmail } from '@/lib/nodemailer';
 import { render } from '@react-email/components';
+import { createAdminClient } from '@/lib/appwrite';
 
 export async function POST(req: NextRequest) {
   try {
     const context = await CheckSession();
+    const { users } = await createAdminClient();
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -25,18 +35,6 @@ export async function POST(req: NextRequest) {
     const user = context.user;
     const { name, status, workspaceId, projectId, dueDate, assigneeId } =
       await req.json();
-
-    const emailHtml = await render(
-      EmailTest({ name: 'vitaliy', subject: 'sdfsdf' })
-    ).catch((e) => console.error(e));
-    
-    if(emailHtml){
-      const email = await sendEmail({
-        to: 'vitaliy.khatsey@gmail.com',
-        subject: 'Header',
-        html: emailHtml,
-      });
-    }
 
     const member = await getMember({
       databases,
@@ -77,6 +75,44 @@ export async function POST(req: NextRequest) {
         position: newPosition,
       }
     );
+
+    //send mail to assignee user
+    try {
+      const memberAssignee = await databases.getDocument(
+        DATABASE_ID,
+        MEMBERS_ID,
+        assigneeId
+      );
+
+      const assigneeUser = await users.get(memberAssignee.userId);
+      
+      if (assigneeUser.$id !== user.$id) {
+        const project = await databases.getDocument(
+          DATABASE_ID,
+          PROJECTS_ID,
+          projectId
+        );
+
+        const workspace = await databases.getDocument(
+          DATABASE_ID,
+          WORKSPACES_ID,
+          project.workspaceId
+        );
+
+        const href = `${PUBLIC_APP}workspaces/${workspace.$id}/tasks/${task.$id}`;
+        const html = `<p>User: name:${user.name} email: ${user.email} create task: ${task.name} for you in  ${project.name} check it to get more information ${href}</p>`;
+
+        await sendEmail({
+          to: assigneeUser.email,
+          subject: 'Create task',
+          html,
+        });
+      }
+    } catch (e) {
+      console.error('Failed t send email', e);
+    }
+
+    //task histories
     const newValue: TaskHistoryValue = {
       name,
       projectId,

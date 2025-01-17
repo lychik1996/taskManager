@@ -1,4 +1,12 @@
-import { DATABASE_ID, TASKS_HISTORY_ID, TASKS_ID } from '@/config';
+import {
+  DATABASE_ID,
+  MEMBERS_ID,
+  PROJECTS_ID,
+  PUBLIC_APP,
+  TASKS_HISTORY_ID,
+  TASKS_ID,
+  WORKSPACES_ID,
+} from '@/config';
 
 import { getMember } from '@/features/members/utils';
 import {
@@ -7,7 +15,9 @@ import {
   TaskHistory,
   TaskHistoryValue,
 } from '@/features/tasks/types';
+import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
+import { sendEmail } from '@/lib/nodemailer';
 import { isEqual, parseISO } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
 import { ID, Query } from 'node-appwrite';
@@ -21,7 +31,7 @@ export async function PATCH(
     if (!context) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-
+    const { users } = await createAdminClient();
     const databases = context.databases;
     const user = context.user;
 
@@ -98,7 +108,7 @@ export async function PATCH(
       }
 
       if (fields.length > 0) {
-         await databases.createDocument<TaskHistory>(
+        await databases.createDocument<TaskHistory>(
           DATABASE_ID,
           TASKS_HISTORY_ID,
           ID.unique(),
@@ -114,6 +124,11 @@ export async function PATCH(
     } catch (e) {
       console.error(`Failed to create taskHistory: ${taskId}`, e);
     }
+    const memberAssignee = await databases.getDocument(
+      DATABASE_ID,
+      MEMBERS_ID,
+      existingTask.assigneeId
+    );
 
     const task = await databases.updateDocument<Task>(
       DATABASE_ID,
@@ -128,6 +143,59 @@ export async function PATCH(
         description,
       }
     );
+
+    try {
+      const workspace = await databases.getDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        task.workspaceId
+      );
+      const project = await databases.getDocument(
+        DATABASE_ID,
+        PROJECTS_ID,
+        task.projectId
+      );
+      const assigneeUser = await users.get(memberAssignee.userId);
+      const newMemberAssignee =
+        existingTask.assigneeId !== assigneeId
+          ? await databases.getDocument(
+              DATABASE_ID,
+              MEMBERS_ID,
+              task.assigneeId
+            )
+          : null;
+      const newAssigneeUser =
+        existingTask.assigneeId !== assigneeId
+          ? await users.get(newMemberAssignee?.userId)
+          : null;
+      const href = `${PUBLIC_APP}workspaces/${workspace.$id}/tasks/${task.$id}`;
+      if (newAssigneeUser) {
+        const htmlNewUser = `<p>User: name:${user.name} email:${user.email} appointed you as the main person in ${project.name} for this task:${task.name}, ${href}"</p>`;
+
+        await sendEmail({
+          to: newAssigneeUser.email,
+          subject: 'New task',
+          html: htmlNewUser,
+        });
+        if (user.$id !== assigneeUser.$id) {
+          const htmlOldUser = `<p>User: name: ${user.name} email: ${user.email} pushed you away in ${project.name} task:${task.name},  ${href}</p>`;
+          await sendEmail({
+            to: assigneeUser.email,
+            subject: 'Pushed you away in task',
+            html: htmlOldUser,
+          });
+        }
+      } else if (user.$id !== assigneeUser.$id) {
+        const html = `<p>User: name: ${user.name} email: ${user.email} has changed your task in ${project.name} task:${task.name}, ${href}</p>`;
+        await sendEmail({
+          to: assigneeUser.email,
+          subject: 'Changed your task',
+          html: html,
+        });
+      }
+    } catch (e) {
+      console.error('Failed to send mail', e);
+    }
 
     return NextResponse.json({ task });
   } catch {
