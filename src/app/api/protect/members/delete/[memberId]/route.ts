@@ -1,9 +1,11 @@
+import { EmailContent, EmailVarian } from '@/components/email/email-content';
 import { DATABASE_ID, MEMBERS_ID, PUBLIC_APP, WORKSPACES_ID } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { getMember } from '@/features/members/utils';
 import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
 import { sendEmail } from '@/lib/nodemailer';
+import { render } from '@react-email/components';
 import { NextRequest, NextResponse } from 'next/server';
 import { Query } from 'node-appwrite';
 
@@ -74,10 +76,27 @@ export async function DELETE(
           const userMember = await users.get(memberInWorspace.userId);
           if (!userMember) return null;
           const href = `${PUBLIC_APP}workspaces/${workspace.$id}`;
-          const html =
+          const component =
             userMember.$id === memberToDelete.userId
-              ? `<p>We left from ${workspace.name}</p>`
-              : `<p>user name:${userToDelete.name}, email:${userToDelete.email} left from our workspace:${workspace.name} link: ${href}</p>`;
+              ? EmailContent({
+                  name: userToDelete.name,
+                  workspaceName: workspace.name,
+                  variant: EmailVarian.REMOVE_MEMBER,
+                  forU: true,
+                })
+              : EmailContent({
+                  name: userMember.name,
+                  appointingName: userToDelete.name,
+                  forU: false,
+                  appointingEmail: userToDelete.email,
+                  workspaceName: workspace.name,
+                  href,
+                  variant: EmailVarian.REMOVE_MEMBER,
+                });
+          const html = await render(component);
+          // userMember.$id === memberToDelete.userId
+          //   ? `<p>You left from ${workspace.name}</p>`
+          //   : `<p>user name:${userToDelete.name}, email:${userToDelete.email} left from our workspace:${workspace.name} link: ${href}</p>`;
           return await sendEmail({
             to: userMember.email,
             subject: 'Left from team',

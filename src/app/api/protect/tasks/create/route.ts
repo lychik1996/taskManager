@@ -1,5 +1,5 @@
 import { getMember } from '@/features/members/utils';
-import EmailTest from '@/components/email/email-content';
+import { EmailContent, EmailVarian } from '@/components/email/email-content';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       );
 
       const assigneeUser = await users.get(memberAssignee.userId);
-      
+
       if (assigneeUser.$id !== user.$id) {
         const project = await databases.getDocument(
           DATABASE_ID,
@@ -100,8 +100,17 @@ export async function POST(req: NextRequest) {
         );
 
         const href = `${PUBLIC_APP}workspaces/${workspace.$id}/tasks/${task.$id}`;
-        const html = `<p>User: name:${user.name} email: ${user.email} create task: ${task.name} for you in  ${project.name} check it to get more information ${href}</p>`;
-
+        const html = await render(
+          EmailContent({
+            name: assigneeUser.name,
+            appointingName: user.name,
+            appointingEmail: user.email,
+            taskName: task.name,
+            projectName: project.name,
+            href,
+            variant: EmailVarian.CREATE_TASK,
+          })
+        );
         await sendEmail({
           to: assigneeUser.email,
           subject: 'Create task',

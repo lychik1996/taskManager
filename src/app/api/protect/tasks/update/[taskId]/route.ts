@@ -1,3 +1,4 @@
+import { EmailContent, EmailVarian } from '@/components/email/email-content';
 import {
   DATABASE_ID,
   MEMBERS_ID,
@@ -18,6 +19,7 @@ import {
 import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
 import { sendEmail } from '@/lib/nodemailer';
+import { render } from '@react-email/components';
 import { isEqual, parseISO } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
 import { ID, Query } from 'node-appwrite';
@@ -170,7 +172,17 @@ export async function PATCH(
           : null;
       const href = `${PUBLIC_APP}workspaces/${workspace.$id}/tasks/${task.$id}`;
       if (newAssigneeUser) {
-        const htmlNewUser = `<p>User: name:${user.name} email:${user.email} appointed you as the main person in ${project.name} for this task:${task.name}, ${href}"</p>`;
+        const htmlNewUser = await render(
+          EmailContent({
+            name: newAssigneeUser.name,
+            appointingName: user.name,
+            appointingEmail: user.email,
+            projectName: project.name,
+            taskName: task.name,
+            href,
+            variant: EmailVarian.APPOINTED_TASK,
+          })
+        );
 
         await sendEmail({
           to: newAssigneeUser.email,
@@ -178,7 +190,18 @@ export async function PATCH(
           html: htmlNewUser,
         });
         if (user.$id !== assigneeUser.$id) {
-          const htmlOldUser = `<p>User: name: ${user.name} email: ${user.email} pushed you away in ${project.name} task:${task.name},  ${href}</p>`;
+          const htmlOldUser = await render(
+            EmailContent({
+              name: assigneeUser.name,
+              appointingName: user.name,
+              appointingEmail: user.email,
+              projectName: project.name,
+              taskName: task.name,
+              href,
+              variant: EmailVarian.REMOVE_ASSINGEE_TASK,
+            })
+          );
+
           await sendEmail({
             to: assigneeUser.email,
             subject: 'Pushed you away in task',
@@ -186,11 +209,21 @@ export async function PATCH(
           });
         }
       } else if (user.$id !== assigneeUser.$id) {
-        const html = `<p>User: name: ${user.name} email: ${user.email} has changed your task in ${project.name} task:${task.name}, ${href}</p>`;
+        const html = await render(
+          EmailContent({
+            name: assigneeUser.name,
+            appointingName: user.name,
+            appointingEmail: user.email,
+            projectName: project.name,
+            taskName: task.name,
+            href,
+            variant: EmailVarian.UPDATE_TASK,
+          })
+        );
         await sendEmail({
           to: assigneeUser.email,
           subject: 'Changed your task',
-          html: html,
+          html,
         });
       }
     } catch (e) {

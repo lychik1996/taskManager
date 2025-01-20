@@ -22,6 +22,8 @@ import {
 } from '@/features/tasks/types';
 import { createAdminClient } from '@/lib/appwrite';
 import { sendEmail } from '@/lib/nodemailer';
+import { render } from '@react-email/components';
+import { EmailContent, EmailVarian } from '@/components/email/email-content';
 
 export async function POST(req: NextRequest) {
   try {
@@ -124,7 +126,7 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    //send mail 
+    //send mail
     if (taskWithDifferentStatus) {
       try {
         const memberAssignee = await databases.getDocument(
@@ -145,7 +147,18 @@ export async function POST(req: NextRequest) {
             taskWithDifferentStatus.projectId
           );
           const href = `${PUBLIC_APP}workspaces/${workspace.$id}/tasks/${taskWithDifferentStatus.$id}`;
-          const html = `<p>User: name: ${user.name} email: ${user.email} has changed your task in ${project.name} task:${taskWithDifferentStatus.name},${href}</p>`;
+          const html = await render(
+            EmailContent({
+              name: assigneeUser.name,
+              appointingName: user.name,
+              appointingEmail: user.email,
+              projectName: project.name,
+              taskName: taskWithDifferentStatus.name,
+              href,
+              variant: EmailVarian.UPDATE_TASK,
+            })
+          );
+
           await sendEmail({
             to: assigneeUser.email,
             subject: 'Changed your task',

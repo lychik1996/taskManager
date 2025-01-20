@@ -42,14 +42,14 @@ export default function EmailWrapper({ children }: EmailWrapperProps) {
                   </Text>
                 </Column>
               </Row>
-
               <Hr className="border-gray-300 my-5" />
               {children}
               <Hr className="border-gray-300 my-5" />
-
-              <Text className="leading-6 text-gray-700 ">Thank you,</Text>
+              <Text className="leading-6 text-gray-700 ">
+                Thank you,for using our product
+              </Text>
               <Text className=" leading-6 text-gray-700 ">
-                The Task Manager team
+                The Task Manager team!
               </Text>
               <Link
                 href="https://task-manager-lake-eight.vercel.app/"

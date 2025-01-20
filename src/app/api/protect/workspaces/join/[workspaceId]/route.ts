@@ -1,3 +1,4 @@
+import { EmailContent, EmailVarian } from '@/components/email/email-content';
 import { DATABASE_ID, MEMBERS_ID, PUBLIC_APP, WORKSPACES_ID } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { getMember } from '@/features/members/utils';
@@ -5,6 +6,7 @@ import { Workspace } from '@/features/workspaces/types';
 import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
 import { sendEmail } from '@/lib/nodemailer';
+import { render } from '@react-email/components';
 import { NextRequest, NextResponse } from 'next/server';
 import { ID, Models, Query } from 'node-appwrite';
 
@@ -72,10 +74,25 @@ export async function POST(
         const userMember = await users.get(member.userId);
         if (!userMember) return null;
         const href = `${PUBLIC_APP}workspaces/${workspaceId}`;
-        const html =
+        const component =
           userMember.$id !== user.$id
-            ? `<p>User (name:${user.name}, email:${user.email}) joined to our workspace:${workspace.name} link:${href}</p>`
-            : `<p>Hy ${user.name}, we are glad that you have joined ours workspace:${workspace.name} link: ${href}</p>`;
+            ? EmailContent({
+                variant: EmailVarian.JOIN_WORKSPACE,
+                name: userMember.name,
+                forU: false,
+                appointingName: user.name,
+                appointingEmail: user.email,
+                workspaceName: workspace.name,
+                href,
+              })
+            : EmailContent({
+                variant: EmailVarian.JOIN_WORKSPACE,
+                name: user.name,
+                forU: true,
+                workspaceName: workspace.name,
+                href,
+              });
+        const html = await render(component);
         return await sendEmail({
           to: userMember.email,
           subject: 'Invite to team',
