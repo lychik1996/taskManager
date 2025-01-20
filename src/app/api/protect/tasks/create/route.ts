@@ -1,5 +1,5 @@
 import { getMember } from '@/features/members/utils';
-import EmailTest from '@/components/email/email-test';
+import EmailTest from '@/components/email/email-content';
 import { CheckSession } from '@/lib/checkSession';
 import { NextRequest, NextResponse } from 'next/server';
 

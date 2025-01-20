@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateVerifyToken } from '@/lib/utils';
 import { DATABASE_ID, PUBLIC_APP, VERIFICATION_TOKENS_ID } from '@/config';
 import { sendEmail } from '@/lib/nodemailer';
+import { render } from '@react-email/components';
+import EmailVerification from '@/components/email/email-content';
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,10 +27,11 @@ export async function POST(req: NextRequest) {
       }
     );
     const verificationUrl = `${PUBLIC_APP}verify-email/${token}`;
+    const html = await render(EmailVerification({href:verificationUrl, name}))
     await sendEmail({
       subject:"Verfication account",
       to:user.email,
-      html:`<p>Copy your link for verification:</p><p>${verificationUrl}</p>`
+      html,
     });
     const res = NextResponse.json({ data: user });
     res.cookies.set('session', session.secret, {
