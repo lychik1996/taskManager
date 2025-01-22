@@ -94,9 +94,6 @@ export async function DELETE(
                   variant: EmailVarian.REMOVE_MEMBER,
                 });
           const html = await render(component);
-          // userMember.$id === memberToDelete.userId
-          //   ? `<p>You left from ${workspace.name}</p>`
-          //   : `<p>user name:${userToDelete.name}, email:${userToDelete.email} left from our workspace:${workspace.name} link: ${href}</p>`;
           return await sendEmail({
             to: userMember.email,
             subject: 'Left from team',

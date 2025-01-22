@@ -12,14 +12,11 @@ import {
 import { useCurrent } from '@/features/auth/api/use-current';
 import { Loader, LogOut } from 'lucide-react';
 
-interface User {
-  name: string;
-  email: string;
-}
+
 export default function UserButton() {
-  const { data, isLoading } = useCurrent();
+  const { data:user, isLoading } = useCurrent();
   const { mutate: logout } = useLogout();
-  const user: User | null = data;
+
 
   if (isLoading) {
     return (

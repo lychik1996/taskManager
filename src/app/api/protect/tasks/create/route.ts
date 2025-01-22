@@ -85,7 +85,6 @@ export async function POST(req: NextRequest) {
       );
 
       const assigneeUser = await users.get(memberAssignee.userId);
-
       if (assigneeUser.$id !== user.$id) {
         const project = await databases.getDocument(
           DATABASE_ID,

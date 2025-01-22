@@ -95,10 +95,8 @@ export default function EditWorkSpaceForm({
     };
 
     mutate(finalValue, {
-      onSuccess: (data) => {
-        // form.reset();
-        // router.push(`/workspaces/${data?.$id}`);
-      },
+      // onSuccess: (data) => {
+      // },
     });
   };
 
