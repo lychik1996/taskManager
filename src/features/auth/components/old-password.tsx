@@ -5,17 +5,24 @@ import { useValidPassword } from '../api/use-valid-password';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
-interface OldPasswordProps{
-    setPasswordValid:(data:boolean)=>void
-    isOldPassword:boolean
+interface OldPasswordProps {
+  setPasswordValid: (data: boolean) => void;
+  isOldPassword: boolean;
+  isPending?: boolean;
+  setResetHandler?: (resetFn: () => void) => void;
 }
 
-export default function OldPassword({setPasswordValid, isOldPassword}:OldPasswordProps) {
+export default function OldPassword({
+  setPasswordValid,
+  isOldPassword,
+  isPending,
+  setResetHandler,
+}: OldPasswordProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const debouncePassword = useDebounce(password, 300);
   const { mutate, data } = useValidPassword();
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
@@ -31,18 +38,24 @@ export default function OldPassword({setPasswordValid, isOldPassword}:OldPasswor
       setError(null);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (data) {
-        setPasswordValid(data.isPasswordValid);
-      } else {
-        setPasswordValid(false);
-      }
-  },[data, setPasswordValid])
+      setPasswordValid(data.isPasswordValid);
+    } else {
+      setPasswordValid(false);
+    }
+  }, [data, setPasswordValid]);
   useEffect(() => {
     if (debouncePassword) {
       mutate(debouncePassword);
     }
   }, [debouncePassword, mutate]);
+  useEffect(() => {
+    setResetHandler?.(() => () => {
+      setPassword('');
+      setError(null);
+    });
+  }, [setResetHandler]);
   return (
     <Label>
       <p className="text-sm font-medium mb-2 select-none">Current Password</p>
@@ -51,7 +64,7 @@ export default function OldPassword({setPasswordValid, isOldPassword}:OldPasswor
         type="password"
         onChange={handleChange}
         value={password}
-        disabled={!isOldPassword}
+        disabled={isPending || !isOldPassword}
       />
       {error && <div className="pt-2 text-red-500">{error}</div>}
     </Label>

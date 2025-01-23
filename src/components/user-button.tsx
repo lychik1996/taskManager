@@ -10,13 +10,12 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { useCurrent } from '@/features/auth/api/use-current';
-import { Loader, LogOut } from 'lucide-react';
-
+import { Loader, LogOut, Settings } from 'lucide-react';
+import Link from 'next/link';
 
 export default function UserButton() {
-  const { data:user, isLoading } = useCurrent();
+  const { data: user, isLoading } = useCurrent();
   const { mutate: logout } = useLogout();
-
 
   if (isLoading) {
     return (
@@ -58,6 +57,13 @@ export default function UserButton() {
               {name || 'User'}
             </p>
             <p className="text-xs text-neutral-500">{email}</p>
+            <Link
+              href="/user"
+              className="flex flex-row items-center text-muted-foreground gap-1"
+            >
+              {' '}
+              <p className="text-sm">Setting</p> <Settings className="size-4" />
+            </Link>
           </div>
         </div>
         <DottedSeparator className="mb-1" />

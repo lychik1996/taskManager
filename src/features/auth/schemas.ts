@@ -12,8 +12,12 @@ export const registerSchema = z.object({
 });
 
 export const updateUserSchema = z.object({
-  name:z.string().trim().min(1,"Required"),
-  newPassord:z.string().trim().min(8,"Min 8").optional(),
-})
+  name: z.string().trim().min(1, 'Required').optional(),
+  newPassword: z.string().trim().min(8, 'Min 8').optional(),
+});
 
-export const validPasswordSchema = z.string().trim().min(8,"Write min 8 symbol").optional()
+export const validPasswordSchema = z
+  .string()
+  .trim()
+  .min(8, 'Write min 8 symbol')
+  .optional();
