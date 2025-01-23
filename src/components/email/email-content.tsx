@@ -11,6 +11,7 @@ export enum EmailVarian {
   REMOVE_ASSINGEE_TASK = 'remove_assignee',
   JOIN_WORKSPACE = 'join_workspace',
   REMOVE_MEMBER = 'remove_member',
+  DELETE_USER = 'delete_user',
 }
 export function EmailContent({
   name,
@@ -194,6 +195,19 @@ export function EmailContent({
             <Link href={href} className="font-bold">
               Link
             </Link>
+          </Text>
+        </>
+      )}
+      {variant === EmailVarian.DELETE_USER && (
+        <>
+          <Text>
+            Hello: <span className="font-bold">{name}</span>.
+          </Text>
+          <Text>It&apos;s a pity that you left our platform.</Text>
+          <Text>Hope that you will return to us soon.</Text>
+          <Text>
+            If you have something to say to us, you can follow the link:{' '}
+            <Link href={`${PUBLIC_APP}contact-us`}>contact us</Link>
           </Text>
         </>
       )}

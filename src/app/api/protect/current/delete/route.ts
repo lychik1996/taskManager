@@ -1,5 +1,8 @@
+import { EmailContent, EmailVarian } from '@/components/email/email-content';
 import { createAdminClient } from '@/lib/appwrite';
 import { CheckSession } from '@/lib/checkSession';
+import { sendEmail } from '@/lib/nodemailer';
+import { render } from '@react-email/components';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(req: NextRequest) {
@@ -18,6 +21,16 @@ export async function DELETE(req: NextRequest) {
     const response = NextResponse.json({
       message: 'User deleted successfully',
     });
+    try{
+         const html = await render(EmailContent({variant:EmailVarian.DELETE_USER,name:user.name}))
+         await sendEmail({
+          to:user.email,
+          subject:"Delete account",
+          html
+         })
+    }catch(e){
+        console.error('Failed to send mail', e);
+    }
     response.cookies.delete('session');
 
     return response;
