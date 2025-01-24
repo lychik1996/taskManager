@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
 
     const user = await account.create(ID.unique(), email, password, name);
     const session = await account.createEmailPasswordSession(email, password);
-
     const token = generateVerifyToken();
 
     const tokenField = await databases.createDocument(

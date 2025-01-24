@@ -33,9 +33,7 @@ export default function SignInCard() {
   });
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
     mutate(values, {
-      onSuccess: (data) => {
-        
-      },
+      onSuccess: (data) => {},
     });
   };
   return (
@@ -98,12 +96,14 @@ export default function SignInCard() {
           size={'lg'}
           className="w-full"
           disabled={isPending}
-          onClick={()=>signUpWithGoogle()}
+          onClick={() => signUpWithGoogle()}
         >
-          <FcGoogle className={cn(
-            "mr-2 size-5" ,
-            isPending && "text-muted-foreground opacity-30"
-          )}/>
+          <FcGoogle
+            className={cn(
+              'mr-2 size-5',
+              isPending && 'text-muted-foreground opacity-30'
+            )}
+          />
           Login with Google
         </Button>
         <Button
@@ -111,7 +111,7 @@ export default function SignInCard() {
           size={'lg'}
           className="w-full"
           disabled={isPending}
-          onClick={()=>signUpWithGithub()}
+          onClick={() => signUpWithGithub()}
         >
           <FaGithub className="mr-2 size-5" />
           Login with Githhub
@@ -120,11 +120,20 @@ export default function SignInCard() {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardContent className="p-7 flex items-center justify-center">
+      <CardContent className="p-7 flex flex-col gap-2 items-center justify-center">
         <p>
           Don&apos;t have an account?{' '}
           <Link href="/sign-up">
             <span className="text-blue-700">Sign Up</span>
+          </Link>
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Do you have a question?{'  '}
+          <Link
+            href="contact-us"
+            className="text-blue-400 hover:text-blue-700 text-sm"
+          >
+            Contac Us
           </Link>
         </p>
       </CardContent>

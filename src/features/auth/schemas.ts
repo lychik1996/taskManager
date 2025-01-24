@@ -16,6 +16,11 @@ export const updateUserSchema = z.object({
   newPassword: z.string().trim().min(8, 'Min 8').optional(),
 });
 
+export const contactUsSchema = z.object({
+  email: z.string().email(),
+  description: z.string().min(1, 'Required'),
+});
+
 export const validPasswordSchema = z
   .string()
   .trim()

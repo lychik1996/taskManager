@@ -9,6 +9,8 @@ export const PROJECTS_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECTS_ID!;
 export const TASKS_ID = process.env.NEXT_PUBLIC_APPWRITE_TASKS_ID!;
 export const TASKS_HISTORY_ID=process.env.NEXT_PUBLIC_APPWRITE_TASKS_HISTORY_ID!;
 export const VERIFICATION_TOKENS_ID= process.env.NEXT_PUBLIC_APPWRITE_VERIFICATION_TOKENS_ID!;
+export const CONTACT_US =process.env.NEXT_PUBLIC_APPWRITE_CONTACT_US!;
 export const EMAIL_PASS= process.env.NEXT_PUBLIC_EMAIL_PASS!;
 export const EMAIL_USER = process.env.NEXT_PUBLIC_EMAIL_USER!;
+
 
