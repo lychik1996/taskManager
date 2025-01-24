@@ -12,11 +12,12 @@ import {
 import { useCurrent } from '@/features/auth/api/use-current';
 import { Loader, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function UserButton() {
   const { data: user, isLoading } = useCurrent();
   const { mutate: logout } = useLogout();
-
+  const [open, setOpen] = useState(false);
   if (isLoading) {
     return (
       <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
@@ -32,7 +33,7 @@ export default function UserButton() {
     ? name.charAt(0).toUpperCase()
     : email.charAt(0).toUpperCase() ?? 'U';
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="outline-none relative">
         <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
           <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center">
@@ -57,18 +58,25 @@ export default function UserButton() {
               {name || 'User'}
             </p>
             <p className="text-xs text-neutral-500">{email}</p>
-            <Link
-              href="/user"
-              className="flex flex-row items-center text-muted-foreground gap-1"
-            >
-              {' '}
-              <p className="text-sm">Setting</p> <Settings className="size-4" />
-            </Link>
+            
+              <Link
+                href="/user"
+                className="flex flex-row items-center text-muted-foreground gap-1"
+                onClick={()=>setOpen(false)}
+              >
+                {' '}
+                <p className="text-sm">Setting</p>{' '}
+                <Settings className="size-4" />
+              </Link>
+            
           </div>
         </div>
         <DottedSeparator className="mb-1" />
         <DropdownMenuItem
-          onClick={() => logout()}
+          onClick={() => {
+            setOpen(false);
+            logout();
+          }}
           className="h-10 flex items-center justify-center text-amber-700 font-medium cursor-pointer"
         >
           <LogOut className="size-4 mr-2" />
