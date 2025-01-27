@@ -5,15 +5,17 @@ import { cn } from '@/lib/utils';
 import QueryProvider from '@/components/query-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import ThemeProvider from '@/components/theme-wrapper';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Task Manager',
   description: 'Task Manager for team',
-  icons:{
-    icon:'/logo.svg',
-    apple:'/logo.svg'
-  }
+  icons: {
+    icon: '/logo.svg',
+    apple: '/logo.svg',
+  },
 };
 
 export default function RootLayout({
@@ -24,10 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, 'antialiased min-h-screen')}>
-        <QueryProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </QueryProvider>
-        <Toaster />
+        <ThemeProvider>
+          <QueryProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </QueryProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -80,10 +80,10 @@ export default function ContactUsForm({ user }: ContactUsFormProps) {
                         </FormControl>
                         {user && (
                           <Button
-                            variant={editEmail ? 'secondary' : 'ghost'}
+                            variant="outline"
                             disabled={isPending}
                             type="button"
-                            className="text-muted-foreground hover:text-black"
+                            className="text-muted-foreground shadow-none border-none"
                             onClick={() => setEditEmail((prev) => !prev)}
                           >
                             {editEmail ? (

@@ -55,7 +55,7 @@ export default function Navigation({onClose}:NavigationProps) {
             <div
               className={cn(
                 'flex items-start gap-2.5 p-2.5 rounded-md font-medium hover:text-primary transition text-neutral-500 ',
-                isActive && 'bg-white shadow-sm hover:opacity-100 text-primary'
+                isActive && 'bg-white dark:bg-neutral-800 shadow-sm hover:opacity-100 text-primary'
               )}
             >
               <Icon className="size-5 text-neutral-500" />

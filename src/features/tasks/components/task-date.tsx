@@ -19,7 +19,7 @@ export default function TaskDate({ value, className }: TaskDateProps) {
     textColor = 'text-yellow-500';
   }
   return (
-    <div className={textColor}>
+    <div className={cn("flex items-center",textColor)} >
       <span className={cn('truncate', className)}>{format(value, 'PPP')}</span>
     </div>
   );

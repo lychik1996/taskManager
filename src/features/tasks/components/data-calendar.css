@@ -59,3 +59,7 @@
 .custom-scrollbar::-webkit-scrollbar-track {
   @apply rounded;
 }
+
+.rbc-off-range-bg{
+  @apply dark:bg-neutral-600
+}

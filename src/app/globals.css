@@ -21,7 +21,6 @@
     text-wrap: balance;
   }
 }
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -92,4 +91,10 @@
 }
 .hide-scrollbar:state(webkit-scrollbar) {
   display: none;
+}
+body::-webkit-scrollbar{
+  @apply dark:bg-neutral-800
+}
+body::-webkit-scrollbar-thumb{
+  @apply dark:bg-neutral-600
 }

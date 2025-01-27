@@ -12,8 +12,8 @@ interface SidebarProps {
 }
 export default function Sidebar({ onClose }: SidebarProps) {
   return (
-    <ScrollArea className="h-full bg-neutral-100">
-      <aside className="min-h-screen bg-neutral-100 p-4 w-full">
+    <ScrollArea className="h-full bg-neutral-100 dark:bg-neutral-900">
+      <aside className="min-h-screen bg-neutral-100 dark:bg-neutral-900 p-4 w-full">
         <Link href="/">
           <Image src="/logo.svg" alt="logo" width={100} height={60} />
         </Link>
@@ -24,9 +24,9 @@ export default function Sidebar({ onClose }: SidebarProps) {
         <DottedSeparator className="my-4" />
         <Projects onClose={onClose} />
         <DottedSeparator className='my-4'/>
-        <div className=" w-full  flex items-center gap-2 text-muted-foreground hover:text-black">
+        <div className=" w-full  flex items-center gap-2 text-neutral-500">
           <MailQuestion className="size-4" />
-          <Link href="/contact-us" className=" text-sm">
+          <Link href="/contact-us" className="text-sm hover:text-primary">
             Contact Us
           </Link>
         </div>

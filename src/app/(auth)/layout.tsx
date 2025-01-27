@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   const pathname = usePathname();
   const isSignIn = pathname === '/sign-in';
   return (
-    <main className="bg-neutral-100 min-h-screen">
+    <main className="bg-neutral-100 min-h-screen dark:bg-neutral-900">
       <div className="mx-auto max-w-screen-2xl p-4">
         <nav className="flex justify-between items-center">
           <Image src="/logo.svg" alt="Logo" width={100} height={74} />

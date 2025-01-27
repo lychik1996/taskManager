@@ -35,8 +35,8 @@ export default function UserButton() {
   return (
     <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="outline-none relative">
-        <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
-          <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center">
+        <Avatar className="size-10 hover:opacity-75 hover:dark:opacity-90 transition border border-neutral-300 dark:border-none ">
+          <AvatarFallback className="bg-neutral-200 dark:bg-white dark:text-black font-medium text-neutral-500 flex items-center justify-center">
             {avatarFallback}
           </AvatarFallback>
         </Avatar>
@@ -48,13 +48,13 @@ export default function UserButton() {
         sideOffset={10}
       >
         <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
-          <Avatar className="size-[52px]  border border-neutral-300">
-            <AvatarFallback className="bg-neutral-200 text-xl font-medium text-neutral-500 flex items-center justify-center">
+          <Avatar className="size-[52px]  border border-neutral-300 dark:border-none">
+            <AvatarFallback className="bg-neutral-200 dark:bg-white  text-xl font-medium text-neutral-500 flex items-center justify-center">
               {avatarFallback}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-center justify-center">
-            <p className="text-sm font-medium text-neutral-900">
+            <p className="text-sm font-medium">
               {name || 'User'}
             </p>
             <p className="text-xs text-neutral-500">{email}</p>

@@ -73,7 +73,7 @@ const TasksList = ({ data, total }: TasksListProps) => {
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Tasks({total})</p>
           <Button variant="muted" size="icon" onClick={() => createTask()}>
-            <PlusIcon className="size-4 text-neutral-400" />
+            <PlusIcon className="size-4 text-neutral-400 dark:text-white" />
           </Button>
         </div>
         <DottedSeparator className="my-4" />
@@ -81,7 +81,7 @@ const TasksList = ({ data, total }: TasksListProps) => {
           {data.map((task) => (
             <li key={task.$id}>
               <Link href={`/workspaces/${workspaceId}/tasks/${task.$id}`}>
-                <Card className="shadow-none rounded-lg hover:opacity-75 transition">
+                <Card className="shadow-none rounded-lg hover:opacity-75 transition dark:bg-neutral-900 hover:dark:opacity-85">
                   <CardContent className="p-4">
                     <p className="text-lg font-medium truncate">{task.name}</p>
                     <div className="flex items-center gap-x-2">
@@ -121,7 +121,7 @@ const ProjectsList = ({ data, total }: ProjectsListProps) => {
   const { open: createProject } = useCreateProjectModal();
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white dark:bg-muted border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Projects({total})</p>
           <Button variant="secondary" size="icon" onClick={createProject}>
@@ -133,7 +133,7 @@ const ProjectsList = ({ data, total }: ProjectsListProps) => {
           {data.map((project) => (
             <li key={project.$id}>
               <Link href={`/workspaces/${workspaceId}/projects/${project.$id}`}>
-                <Card className="shadow-none rounded-lg hover:opacity-75 transition">
+                <Card className="shadow-none rounded-lg hover:opacity-75 transition dark:bg-neutral-900 hover:dark:opacity-85">
                   <CardContent className="p-4 flex items-center gap-x-2.5">
                     <ProjectAvatar
                       name={project.name}
@@ -168,7 +168,7 @@ const MembersList = ({ data, total }: MembersListProps) => {
 
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white dark:bg-muted border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Members({total})</p>
           <Button variant="secondary" size="icon" asChild>
@@ -181,7 +181,7 @@ const MembersList = ({ data, total }: MembersListProps) => {
         <ul className="flex flex-col md:flex-row flex-wrap gap-4">
           {data.map((member) => (
             <li key={member.$id} className="flex-1">
-              <Card className="shadow-none border rounded-md overflow-auto">
+              <Card className="shadow-none border rounded-md overflow-auto dark:bg-neutral-900">
                 <CardContent className="p-3 flex items-center gap-x-2">
                   <MemberAvatar name={member.name} className="size-14" />
                   <div className="flex flex-col min-w-48">

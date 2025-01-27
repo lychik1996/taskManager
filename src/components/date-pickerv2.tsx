@@ -47,7 +47,7 @@ export default function DatePickerV2({
         size="lg"
         className={cn(
           'w-full justify-start text-left font-normal px-3',
-          !value && 'text-muted-foreground',
+          !value && 'text-muted-foreground dark:text-neutral-100',
           className
         )}
         type="button"
@@ -58,7 +58,7 @@ export default function DatePickerV2({
       </Button>
 
       {isOpen && (
-          <div className="w-auto p-0 z-[1000] absolute bg-white border-gray-300 border-1px rounded-lg shadow-md" 
+          <div className="w-auto p-0 z-[1000] absolute bg-white border-gray-300 dark:bg-neutral-800 border-1px rounded-lg shadow-md" 
           style={{
             top: calendarRef.current? `${calendarRef.current.offsetHeight}px` : '0px',
             position: 'absolute',
