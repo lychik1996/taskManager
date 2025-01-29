@@ -159,7 +159,7 @@ export async function PATCH(
       );
       const assigneeUser = await users.get(memberAssignee.userId);
       const newMemberAssignee =
-        existingTask.assigneeId !== assigneeId
+        assigneeId && existingTask.assigneeId !== assigneeId
           ? await databases.getDocument(
               DATABASE_ID,
               MEMBERS_ID,
@@ -167,7 +167,7 @@ export async function PATCH(
             )
           : null;
       const newAssigneeUser =
-        existingTask.assigneeId !== assigneeId
+        assigneeId && existingTask.assigneeId !== assigneeId
           ? await users.get(newMemberAssignee?.userId)
           : null;
       const href = `${PUBLIC_APP}workspaces/${workspace.$id}/tasks/${task.$id}`;
